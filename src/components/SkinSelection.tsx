@@ -1,6 +1,5 @@
 import React from 'react';
 import { Skin } from './Game';
-import ConnectWalletButton from './ConnectWalletButton';
 
 interface SkinSelectionProps {
   skins: Skin[];
@@ -160,45 +159,34 @@ const SkinSelection: React.FC<SkinSelectionProps> = ({
         ))}
       </div>
 
-             {/* Wallet Connection and Play Buttons */}
-       <div style={{
-         display: 'flex',
-         gap: '20px',
-         alignItems: 'center',
-         marginBottom: '30px'
-       }}>
-         <ConnectWalletButton>
-           🔗 Connect Wallet
-         </ConnectWalletButton>
-         
-         <button
-           onClick={() => onStartGame(selectedSkin)}
-           style={{
-             padding: '15px 40px',
-             fontSize: '24px',
-             fontWeight: 'bold',
-             backgroundColor: '#ffd700',
-             color: '#000',
-             border: 'none',
-             borderRadius: '25px',
-             cursor: 'pointer',
-             transition: 'all 0.3s ease',
-             boxShadow: '0 4px 15px rgba(255, 215, 0, 0.3)',
-             textTransform: 'uppercase',
-             letterSpacing: '1px'
-           }}
-           onMouseEnter={(e) => {
-             e.currentTarget.style.transform = 'scale(1.05)';
-             e.currentTarget.style.boxShadow = '0 6px 20px rgba(255, 215, 0, 0.4)';
-           }}
-           onMouseLeave={(e) => {
-             e.currentTarget.style.transform = 'scale(1)';
-             e.currentTarget.style.boxShadow = '0 4px 15px rgba(255, 215, 0, 0.3)';
-           }}
-         >
-           🎮 Play Game
-         </button>
-       </div>
+      {/* Play Button */}
+      <button
+        onClick={() => onStartGame(selectedSkin)}
+        style={{
+          padding: '15px 40px',
+          fontSize: '24px',
+          fontWeight: 'bold',
+          backgroundColor: '#ffd700',
+          color: '#000',
+          border: 'none',
+          borderRadius: '25px',
+          cursor: 'pointer',
+          transition: 'all 0.3s ease',
+          boxShadow: '0 4px 15px rgba(255, 215, 0, 0.3)',
+          textTransform: 'uppercase',
+          letterSpacing: '1px'
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.transform = 'scale(1.05)';
+          e.currentTarget.style.boxShadow = '0 6px 20px rgba(255, 215, 0, 0.4)';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.transform = 'scale(1)';
+          e.currentTarget.style.boxShadow = '0 4px 15px rgba(255, 215, 0, 0.3)';
+        }}
+      >
+        🎮 Play Game
+      </button>
 
       {/* Instructions */}
       <div style={{
