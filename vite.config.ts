@@ -7,10 +7,12 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',
     port: parseInt(process.env.PORT || '3000'),
+    allowedHosts: ['bee-ware.onrender.com', 'localhost', '127.0.0.1'],
   },
   preview: {
     host: '0.0.0.0',
     port: parseInt(process.env.PORT || '3000'),
+    allowedHosts: ['bee-ware.onrender.com', 'localhost', '127.0.0.1'],
   },
   build: {
     outDir: 'dist',
