@@ -1,5 +1,6 @@
 import React from 'react';
 import { Skin } from './Game';
+import { DailyGamesManager } from '../utils/DailyGamesManager';
 
 interface SkinSelectionProps {
   skins: Skin[];
@@ -14,6 +15,8 @@ const SkinSelection: React.FC<SkinSelectionProps> = ({
   onSkinSelect,
   onStartGame
 }) => {
+  const canPlay = DailyGamesManager.canPlayGame();
+  const isDev = DailyGamesManager.isDevelopmentMode();
   return (
     <div style={{
       width: '100%',
@@ -48,6 +51,26 @@ const SkinSelection: React.FC<SkinSelectionProps> = ({
         }}>
           Choose your bee and start the adventure!
         </p>
+        {!isDev && (
+          <p style={{
+            fontSize: '14px',
+            margin: '10px 0 0 0',
+            color: '#ffd700',
+            opacity: 0.9
+          }}>
+            🎮 3 games per day • Reset at midnight
+          </p>
+        )}
+        {isDev && (
+          <p style={{
+            fontSize: '14px',
+            margin: '10px 0 0 0',
+            color: '#00ff00',
+            opacity: 0.9
+          }}>
+            🛠️ Development Mode • Unlimited Games
+          </p>
+        )}
       </div>
 
       {/* Skin Selection */}
@@ -162,30 +185,35 @@ const SkinSelection: React.FC<SkinSelectionProps> = ({
       {/* Play Button */}
       <button
         onClick={() => onStartGame(selectedSkin)}
+        disabled={!canPlay}
         style={{
           padding: '15px 40px',
           fontSize: '24px',
           fontWeight: 'bold',
-          backgroundColor: '#ffd700',
-          color: '#000',
+          backgroundColor: canPlay ? '#ffd700' : '#666666',
+          color: canPlay ? '#000' : '#999',
           border: 'none',
           borderRadius: '25px',
-          cursor: 'pointer',
+          cursor: canPlay ? 'pointer' : 'not-allowed',
           transition: 'all 0.3s ease',
-          boxShadow: '0 4px 15px rgba(255, 215, 0, 0.3)',
+          boxShadow: canPlay ? '0 4px 15px rgba(255, 215, 0, 0.3)' : 'none',
           textTransform: 'uppercase',
           letterSpacing: '1px'
         }}
         onMouseEnter={(e) => {
-          e.currentTarget.style.transform = 'scale(1.05)';
-          e.currentTarget.style.boxShadow = '0 6px 20px rgba(255, 215, 0, 0.4)';
+          if (canPlay) {
+            e.currentTarget.style.transform = 'scale(1.05)';
+            e.currentTarget.style.boxShadow = '0 6px 20px rgba(255, 215, 0, 0.4)';
+          }
         }}
         onMouseLeave={(e) => {
-          e.currentTarget.style.transform = 'scale(1)';
-          e.currentTarget.style.boxShadow = '0 4px 15px rgba(255, 215, 0, 0.3)';
+          if (canPlay) {
+            e.currentTarget.style.transform = 'scale(1)';
+            e.currentTarget.style.boxShadow = '0 4px 15px rgba(255, 215, 0, 0.3)';
+          }
         }}
       >
-        🎮 Play Game
+        {canPlay ? '🎮 Play Game' : 'No Games Left'}
       </button>
 
       {/* Instructions */}
