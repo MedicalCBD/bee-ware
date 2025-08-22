@@ -1,74 +1,72 @@
-# Bee-ware
+# Bee-Ware! 🐝
 
-A simplified Vampire Survivors-like game built with React and Phaser 3.
+Un juego de supervivencia top-down donde controlas una abeja que debe defenderse de enemigos usando magia y mejoras.
 
-## Description
+## 🎮 Características
 
-This is a browser-based, top-down view game where the player character automatically attacks waves of enemies. The game features:
+- **Mapa grande**: Mundo expansivo de 2048x1536 píxeles
+- **Sistema de magia**: Thunder magic con rayos automáticos
+- **Sistema de mejoras**: 6 tipos diferentes de mejoras
+- **Game over mejorado**: Pantalla de reinicio funcional
+- **Cámara dinámica**: Sigue al jugador suavemente
+- **UI centrada**: Interfaz siempre visible y centrada
 
-- Player character movement
-- Enemy spawning in waves
-- Automatic player attacks (firing projectiles)
-- Basic level-up choices
-- Experience and leveling system
-- Player and enemy health systems
-- Game over state
+## 🚀 Despliegue en Render
 
-## Development Setup
+### Configuración Automática
 
-This project was bootstrapped with Vite.
+1. Conecta tu repositorio de GitHub a Render
+2. Render detectará automáticamente la configuración desde `render.yaml`
+3. El servicio se desplegará automáticamente
 
-### Prerequisites
+### Configuración Manual
 
-- Node.js (version 18+ recommended)
-- npm
+Si prefieres configurar manualmente:
 
-### Installation
+1. **Build Command**: `npm install && npm run build`
+2. **Start Command**: `npm start`
+3. **Environment**: Node.js
+4. **Health Check Path**: `/`
+
+## 🛠️ Desarrollo Local
 
 ```bash
-# Clone the repository
-git clone [repository-url]
-
-# Navigate to the project directory
-cd bee-ware
-
-# Install dependencies
+# Instalar dependencias
 npm install
 
-# Start the development server
+# Ejecutar en modo desarrollo
 npm run dev
+
+# Construir para producción
+npm run build
+
+# Vista previa de producción
+npm run preview
 ```
 
-## Tech Stack
+## 🎯 Controles
 
-- React
-- Phaser 3 (game framework)
-- TypeScript
-- Vite (build tool)
+- **WASD / Flechas**: Mover la abeja
+- **Mouse**: Apuntar y disparar
+- **SPACE**: Reiniciar juego (en pantalla de game over)
 
-## Project Structure
+## ⚡ Mejoras Disponibles
 
-```
-bee-ware/
-├── public/             # Static assets
-│   └── assets/         # Game assets (sprites, sounds)
-├── src/
-│   ├── phaser/         # Phaser game code
-│   │   ├── config/     # Game configuration
-│   │   ├── entities/   # Game entities (player, enemies)
-│   │   ├── scenes/     # Game scenes
-│   │   ├── systems/    # Game systems (enemies, projectiles, etc.)
-│   │   └── ui/         # UI components
-│   ├── components/     # React components
-│   ├── App.tsx         # Main App component
-│   └── main.tsx        # Entry point
-└── package.json        # Dependencies and scripts
-```
+1. **Increased Damage**: Aumenta el daño de proyectiles
+2. **Attack Speed**: Aumenta la velocidad de ataque
+3. **Multi-Shot**: Dispara proyectiles adicionales
+4. **Larger Projectiles**: Aumenta el tamaño de proyectiles
+5. **Max Health**: Aumenta la salud máxima
+6. **Movement Speed**: Aumenta la velocidad de movimiento
+7. **Thunder Magic**: ⚡ Rayos automáticos cada 4 segundos
 
-## Future Enhancements
+## 🎨 Tecnologías
 
-- Additional enemy types
-- More weapon types
-- Power-ups
-- Sound effects and music
-- Save game functionality
+- **Frontend**: React + TypeScript
+- **Game Engine**: Phaser 3
+- **Build Tool**: Vite
+- **Deployment**: Render
+
+## 📝 Licencia
+
+Este proyecto es privado y está desarrollado para fines educativos y de entretenimiento.

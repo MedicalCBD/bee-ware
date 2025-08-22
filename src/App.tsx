@@ -3,8 +3,8 @@ import './styles/App.css';
 import Game from './components/Game';
 
 // Define public paths for images
-const headerImage = '/bee-ware/assets/images/ui/beeware-header.png';
-const borderImage = '/bee-ware/assets/images/ui/beeware-border.png';
+const headerImage = '/assets/images/ui/beeware-header.png';
+const borderImage = '/assets/images/ui/beeware-border.png';
 
 const App: React.FC = () => {
   return (

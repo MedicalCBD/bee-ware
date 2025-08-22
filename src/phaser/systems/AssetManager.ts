@@ -16,13 +16,13 @@ export class AssetManager {
    */
   preloadAssets(): void {
     // Load player sprite
-    this.scene.load.image('player', 'assets/images/game/player.png');
+    this.scene.load.image('player', '/assets/images/game/player.png');
     
     // Load enemy sprite
-    this.scene.load.image('enemy', 'assets/images/game/enemy.png');
+    this.scene.load.image('enemy', '/assets/images/game/enemy.png');
     
     // Load world background
-    this.scene.load.image('background', 'assets/images/game/game-bg.png');
+    this.scene.load.image('background', '/assets/images/game/game-bg.png');
     
     // Create upgrade icons
     this.createUpgradeIcons();
