@@ -14,11 +14,7 @@ const WalletStatus: React.FC = () => {
     }
   };
 
-  const handleDisconnect = () => {
-    // Abstract Global Wallet doesn't have a direct disconnect method
-    // The wallet will remain connected until the user manually disconnects
-    console.log('Wallet will remain connected. User can disconnect manually from the wallet interface.');
-  };
+
 
   return (
     <>

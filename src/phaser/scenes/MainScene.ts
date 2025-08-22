@@ -56,7 +56,7 @@ export default class MainScene extends Phaser.Scene {
   preload(): void {
     // Initialize asset manager and load assets
     this.assetManager = new AssetManager(this);
-    this.assetManager.preloadAssets(this.selectedSkin);
+    this.assetManager.preloadAssets();
     
     // Create a circular texture for projectiles
     this.createProjectileTexture();

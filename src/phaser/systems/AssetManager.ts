@@ -14,7 +14,7 @@ export class AssetManager {
   /**
    * Preload all game assets
    */
-  preloadAssets(selectedSkin?: { id: string; image: string }): void {
+  preloadAssets(): void {
     // Load all player sprite sheets
     this.scene.load.spritesheet('player', '/assets/images/game/player1.png', { 
       frameWidth: 34, 
