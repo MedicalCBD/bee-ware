@@ -4,6 +4,7 @@ import Game from './components/Game';
 import AbstractProvider from './components/AbstractProvider';
 import WalletStatus from './components/WalletStatus';
 import Loader from './components/Loader';
+import AudioPlayer from './components/AudioPlayer';
 
 // Define public paths for images
 const headerImage = '/assets/images/ui/beeware-header.png';
@@ -24,6 +25,7 @@ const App: React.FC = () => {
         ) : (
           <>
             <WalletStatus />
+            <AudioPlayer isPlaying={!isLoading} />
             <main>
               <div className="game-border-container">
                 <img 

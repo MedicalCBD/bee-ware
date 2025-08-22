@@ -196,33 +196,7 @@ const WalletStatus: React.FC = () => {
               </span>
             </div>
             
-            <button
-              onClick={handleDisconnect}
-              style={{
-                backgroundColor: '#ff4444',
-                color: 'white',
-                border: 'none',
-                padding: '10px 16px',
-                borderRadius: '6px',
-                cursor: 'pointer',
-                fontSize: '12px',
-                fontWeight: 'bold',
-                width: '100%',
-                textTransform: 'uppercase',
-                letterSpacing: '1px',
-                transition: 'all 0.3s ease'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = '#ff6666';
-                e.currentTarget.style.transform = 'translateY(-2px)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = '#ff4444';
-                e.currentTarget.style.transform = 'translateY(0)';
-              }}
-            >
-              Disconnect
-            </button>
+
           </div>
        )}
          </div>
