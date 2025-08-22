@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="public/bee-icon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chain Survivors</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    
+    <!-- Audio element for background music -->
+    <audio id="backgroundMusic" loop>
+      <source src="public/assets/images/ui/song.mp3" type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio>
+    
+    <!-- Music control button -->
+    <div id="musicControl" style="
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      background: rgba(0, 255, 0, 0.2);
+      border: 2px solid #00ff00;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 1000;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+    " onclick="toggleMusic()">
+      <span id="musicIcon" style="
+        color: #00ff00;
+        font-size: 24px;
+        font-weight: bold;
+        text-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
+      ">▶</span>
+    </div>
+    
+    <script type="module" src="/src/main.tsx"></script>
+    
+    <script>
+      let isMusicPlaying = false;
+      
+      // Auto-play background music when page loads
+      document.addEventListener('DOMContentLoaded', function() {
+        const audio = document.getElementById('backgroundMusic');
+        
+        // Try to play audio (may be blocked by browser)
+        function playAudio() {
+          audio.play().then(function() {
+            isMusicPlaying = true;
+            updateMusicButton();
+          }).catch(function(error) {
+            console.log('Audio autoplay was prevented:', error);
+            isMusicPlaying = false;
+            updateMusicButton();
+            // Add a click event to start audio on first user interaction
+            document.addEventListener('click', function startAudio() {
+              audio.play().then(function() {
+                isMusicPlaying = true;
+                updateMusicButton();
+              });
+              document.removeEventListener('click', startAudio);
+            }, { once: true });
+          });
+        }
+        
+        // Set volume to a reasonable level
+        audio.volume = 0.3;
+        
+        // Try to play immediately
+        playAudio();
+      });
+      
+      // Toggle music play/pause
+      function toggleMusic() {
+        const audio = document.getElementById('backgroundMusic');
+        const musicControl = document.getElementById('musicControl');
+        
+        if (isMusicPlaying) {
+          audio.pause();
+          isMusicPlaying = false;
+        } else {
+          audio.play();
+          isMusicPlaying = true;
+        }
+        
+        updateMusicButton();
+        
+        // Add hover effect
+        musicControl.style.transform = 'scale(1.1)';
+        setTimeout(() => {
+          musicControl.style.transform = 'scale(1)';
+        }, 200);
+      }
+      
+      // Update music button icon and style
+      function updateMusicButton() {
+        const musicIcon = document.getElementById('musicIcon');
+        const musicControl = document.getElementById('musicControl');
+        
+        if (isMusicPlaying) {
+          musicIcon.textContent = '⏸';
+          musicControl.style.background = 'rgba(0, 255, 0, 0.3)';
+          musicControl.style.boxShadow = '0 0 20px rgba(0, 255, 0, 0.7)';
+        } else {
+          musicIcon.textContent = '▶';
+          musicControl.style.background = 'rgba(0, 255, 0, 0.2)';
+          musicControl.style.boxShadow = '0 0 15px rgba(0, 255, 0, 0.5)';
+        }
+      }
+      
+      // Add hover effects
+      document.addEventListener('DOMContentLoaded', function() {
+        const musicControl = document.getElementById('musicControl');
+        
+        musicControl.addEventListener('mouseenter', function() {
+          this.style.transform = 'scale(1.1)';
+          this.style.boxShadow = '0 0 25px rgba(0, 255, 0, 0.8)';
+        });
+        
+        musicControl.addEventListener('mouseleave', function() {
+          this.style.transform = 'scale(1)';
+          if (isMusicPlaying) {
+            this.style.boxShadow = '0 0 20px rgba(0, 255, 0, 0.7)';
+          } else {
+            this.style.boxShadow = '0 0 15px rgba(0, 255, 0, 0.5)';
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
