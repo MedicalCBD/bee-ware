@@ -184,10 +184,15 @@ export class UpgradeUI {
       levelText.setScrollFactor(0); // Don't scroll with camera
       card.add(levelText);
       
-      // Create description text
+      // Create description text with dynamic content for thunder
+      let description = upgrade.description;
+      if (upgrade.id.startsWith('thunder_')) {
+        description = this.upgradeSystem.getThunderDescription(upgrade.id);
+      }
+      
       const descText = this.scene.add.text(
         0, 0,
-        upgrade.description,
+        description,
         {
           fontSize: '18px',
           color: '#ffffff',

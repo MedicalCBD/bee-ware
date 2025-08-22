@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import { Player } from '../entities/Player';
 import { ProjectileSystem } from './ProjectileSystem';
 import { ThunderSystem } from './ThunderSystem';
+import { MagicCircleSystem } from './MagicCircleSystem';
 
 /**
  * Represents an upgrade that can be chosen by the player
@@ -13,7 +14,7 @@ export interface Upgrade {
   icon: string;
   level: number;
   maxLevel: number;
-  apply: (player: Player, _projectileSystem: ProjectileSystem, thunderSystem?: ThunderSystem) => void;
+  apply: (player: Player, _projectileSystem: ProjectileSystem, thunderSystem?: ThunderSystem, magicCircleSystem?: MagicCircleSystem) => void;
 }
 
 /**
@@ -23,6 +24,7 @@ export class UpgradeSystem {
   private player: Player;
   private projectileSystem: ProjectileSystem;
   private thunderSystem: ThunderSystem | null = null;
+  private magicCircleSystem: MagicCircleSystem | null = null;
   private availableUpgrades: Upgrade[] = [];
   private acquiredUpgrades: Map<string, number> = new Map();
   
@@ -39,6 +41,13 @@ export class UpgradeSystem {
    */
   setThunderSystem(thunderSystem: ThunderSystem): void {
     this.thunderSystem = thunderSystem;
+  }
+
+  /**
+   * Set the magic circle system reference
+   */
+  setMagicCircleSystem(magicCircleSystem: MagicCircleSystem): void {
+    this.magicCircleSystem = magicCircleSystem;
   }
   
   /**
@@ -123,7 +132,7 @@ export class UpgradeSystem {
       }
     });
 
-    // Add thunder magic upgrade
+    // Add thunder magic upgrade (initial activation)
     this.availableUpgrades.push({
       id: 'thunder_magic',
       name: 'Thunder Magic',
@@ -137,6 +146,107 @@ export class UpgradeSystem {
         }
       }
     });
+
+    // Add thunder magic improvements
+    this.availableUpgrades.push({
+      id: 'thunder_improve',
+      name: 'Double Thunder',
+      description: 'Upgrade to 2 lightning strikes every 4 seconds',
+      icon: 'thunder_icon',
+      level: 0,
+      maxLevel: 1,
+      apply: (_player, _projectileSystem, thunderSystem) => {
+        if (thunderSystem && thunderSystem.isThunderActive()) {
+          thunderSystem.increaseThunderLevel();
+        }
+      }
+    });
+
+    this.availableUpgrades.push({
+      id: 'thunder_improve_2',
+      name: 'Triple Thunder',
+      description: 'Upgrade to 3 lightning strikes every 4 seconds',
+      icon: 'thunder_icon',
+      level: 0,
+      maxLevel: 1,
+      apply: (_player, _projectileSystem, thunderSystem) => {
+        if (thunderSystem && thunderSystem.isThunderActive()) {
+          thunderSystem.increaseThunderLevel();
+        }
+      }
+    });
+
+    this.availableUpgrades.push({
+      id: 'thunder_improve_3',
+      name: 'Quad Thunder',
+      description: 'Upgrade to 4 lightning strikes every 4 seconds',
+      icon: 'thunder_icon',
+      level: 0,
+      maxLevel: 1,
+      apply: (_player, _projectileSystem, thunderSystem) => {
+        if (thunderSystem && thunderSystem.isThunderActive()) {
+          thunderSystem.increaseThunderLevel();
+        }
+      }
+    });
+
+    // Add magic circle upgrade (initial activation)
+    this.availableUpgrades.push({
+      id: 'magic_circle',
+      name: 'Magic Circle',
+      description: 'Summon a rotating magic circle that damages nearby enemies',
+      icon: 'magic_icon',
+      level: 0,
+      maxLevel: 1,
+      apply: (_player, _projectileSystem, _thunderSystem, magicCircleSystem) => {
+        if (magicCircleSystem) {
+          magicCircleSystem.activate();
+        }
+      }
+    });
+
+    // Add magic circle improvements
+    this.availableUpgrades.push({
+      id: 'magic_circle_improve',
+      name: 'Larger Circle',
+      description: 'Increase magic circle radius and damage',
+      icon: 'magic_icon',
+      level: 0,
+      maxLevel: 1,
+      apply: (_player, _projectileSystem, _thunderSystem, magicCircleSystem) => {
+        if (magicCircleSystem && magicCircleSystem.isMagicCircleActive()) {
+          magicCircleSystem.increaseMagicCircleLevel();
+        }
+      }
+    });
+
+    this.availableUpgrades.push({
+      id: 'magic_circle_improve_2',
+      name: 'Enhanced Circle',
+      description: 'Further increase magic circle radius and damage',
+      icon: 'magic_icon',
+      level: 0,
+      maxLevel: 1,
+      apply: (_player, _projectileSystem, _thunderSystem, magicCircleSystem) => {
+        if (magicCircleSystem && magicCircleSystem.isMagicCircleActive()) {
+          magicCircleSystem.increaseMagicCircleLevel();
+        }
+      }
+    });
+
+    this.availableUpgrades.push({
+      id: 'magic_circle_improve_3',
+      name: 'Master Circle',
+      description: 'Maximum magic circle radius and damage',
+      icon: 'magic_icon',
+      level: 0,
+      maxLevel: 1,
+      apply: (_player, _projectileSystem, _thunderSystem, magicCircleSystem) => {
+        if (magicCircleSystem && magicCircleSystem.isMagicCircleActive()) {
+          magicCircleSystem.increaseMagicCircleLevel();
+        }
+      }
+    });
   }
   
   /**
@@ -144,7 +254,7 @@ export class UpgradeSystem {
    */
   getRandomUpgrades(count: number = 3): Upgrade[] {
     // Filter upgrades that haven't reached max level
-    const availableUpgrades = this.availableUpgrades.filter(upgrade => {
+    let availableUpgrades = this.availableUpgrades.filter(upgrade => {
       const currentLevel = this.acquiredUpgrades.get(upgrade.id) || 0;
       return currentLevel < upgrade.maxLevel;
     });
@@ -154,32 +264,79 @@ export class UpgradeSystem {
       return [];
     }
     
-    // Check if thunder magic is available and hasn't been selected yet
-    const thunderUpgrade = availableUpgrades.find(upgrade => upgrade.id === 'thunder_magic');
+    // Check if thunder magic is active
     const hasThunderMagic = this.acquiredUpgrades.get('thunder_magic') || 0;
+    const thunderLevel = this.thunderSystem?.getThunderLevel() || 0;
     
-    let selectedUpgrades: Upgrade[] = [];
+    // Check if magic circle is active
+    const hasMagicCircle = this.acquiredUpgrades.get('magic_circle') || 0;
+    const magicCircleLevel = this.magicCircleSystem?.getMagicCircleLevel() || 0;
     
-    // If thunder magic is available and not yet acquired, prioritize it
-    if (thunderUpgrade && hasThunderMagic === 0) {
-      selectedUpgrades.push(thunderUpgrade);
-      
-      // Get remaining upgrades (excluding thunder magic)
-      const remainingUpgrades = availableUpgrades.filter(upgrade => upgrade.id !== 'thunder_magic');
-      
-      // Shuffle remaining upgrades
-      const shuffled = [...remainingUpgrades].sort(() => Math.random() - 0.5);
-      
-      // Add remaining upgrades up to the count limit
-      const remainingCount = Math.min(count - 1, shuffled.length);
-      selectedUpgrades.push(...shuffled.slice(0, remainingCount));
+    // Filter thunder improvements based on thunder status
+    if (hasThunderMagic === 0) {
+      // If no thunder magic, only show basic thunder magic
+      availableUpgrades = availableUpgrades.filter(upgrade => 
+        upgrade.id === 'thunder_magic' || 
+        !upgrade.id.startsWith('thunder_improve')
+      );
     } else {
-      // Normal random selection if thunder magic is already acquired or not available
-      const shuffled = [...availableUpgrades].sort(() => Math.random() - 0.5);
-      selectedUpgrades = shuffled.slice(0, Math.min(count, shuffled.length));
+      // If thunder magic is active, show only the next improvement in sequence
+      availableUpgrades = availableUpgrades.filter(upgrade => {
+        if (upgrade.id === 'thunder_magic') {
+          return false; // Don't show basic thunder if already active
+        }
+        // Only show the next improvement based on current thunder level
+        if (thunderLevel === 0 && upgrade.id === 'thunder_improve') {
+          return true; // Show double thunder when at level 0
+        }
+        if (thunderLevel === 1 && upgrade.id === 'thunder_improve_2') {
+          return true; // Show triple thunder when at level 1
+        }
+        if (thunderLevel === 2 && upgrade.id === 'thunder_improve_3') {
+          return true; // Show quad thunder when at level 2
+        }
+        // Hide all thunder improvements if not the next one in sequence
+        if (upgrade.id.startsWith('thunder_improve')) {
+          return false;
+        }
+        return true;
+      });
     }
     
-    return selectedUpgrades;
+    // Filter magic circle improvements based on magic circle status
+    if (hasMagicCircle === 0) {
+      // If no magic circle, only show basic magic circle
+      availableUpgrades = availableUpgrades.filter(upgrade => 
+        upgrade.id === 'magic_circle' || 
+        !upgrade.id.startsWith('magic_circle_improve')
+      );
+    } else {
+      // If magic circle is active, show only the next improvement in sequence
+      availableUpgrades = availableUpgrades.filter(upgrade => {
+        if (upgrade.id === 'magic_circle') {
+          return false; // Don't show basic magic circle if already active
+        }
+        // Only show the next improvement based on current magic circle level
+        if (magicCircleLevel === 0 && upgrade.id === 'magic_circle_improve') {
+          return true; // Show larger circle when at level 0
+        }
+        if (magicCircleLevel === 1 && upgrade.id === 'magic_circle_improve_2') {
+          return true; // Show enhanced circle when at level 1
+        }
+        if (magicCircleLevel === 2 && upgrade.id === 'magic_circle_improve_3') {
+          return true; // Show master circle when at level 2
+        }
+        // Hide all magic circle improvements if not the next one in sequence
+        if (upgrade.id.startsWith('magic_circle_improve')) {
+          return false;
+        }
+        return true;
+      });
+    }
+    
+    // Shuffle and select upgrades
+    const shuffled = [...availableUpgrades].sort(() => Math.random() - 0.5);
+    return shuffled.slice(0, Math.min(count, shuffled.length));
   }
   
   /**
@@ -204,7 +361,7 @@ export class UpgradeSystem {
     }
     
     // Apply the upgrade effect
-    upgrade.apply(this.player, this.projectileSystem, this.thunderSystem || undefined);
+    upgrade.apply(this.player, this.projectileSystem, this.thunderSystem || undefined, this.magicCircleSystem || undefined);
     
     // Update acquired upgrades
     this.acquiredUpgrades.set(upgradeId, currentLevel + 1);
@@ -217,6 +374,24 @@ export class UpgradeSystem {
    */
   getUpgradeLevel(upgradeId: string): number {
     return this.acquiredUpgrades.get(upgradeId) || 0;
+  }
+
+  /**
+   * Get dynamic description for thunder magic based on upgrade ID
+   */
+  getThunderDescription(upgradeId: string): string {
+    switch (upgradeId) {
+      case 'thunder_magic':
+        return 'Summon lightning strikes every 4 seconds';
+      case 'thunder_improve':
+        return 'Upgrade to 2 lightning strikes every 4 seconds';
+      case 'thunder_improve_2':
+        return 'Upgrade to 3 lightning strikes every 4 seconds';
+      case 'thunder_improve_3':
+        return 'Upgrade to 4 lightning strikes every 4 seconds';
+      default:
+        return 'Summon lightning strikes every 4 seconds';
+    }
   }
   
   /**

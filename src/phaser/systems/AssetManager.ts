@@ -115,6 +115,9 @@ export class AssetManager {
     
     // Create thunder icon (yellow lightning)
     this.createIconTexture('thunder_icon', 0xffff00);
+    
+    // Create magic circle icon (purple)
+    this.createIconTexture('magic_icon', 0x9932cc);
   }
   
   /**

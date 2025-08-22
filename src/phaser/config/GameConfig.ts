@@ -76,6 +76,15 @@ export const GAME_CONFIG = {
     STRIKE_DURATION: 500, // How long the lightning effect lasts
     EXPLOSION_DURATION: 300 // How long the explosion effect lasts
   },
+  MAGIC_CIRCLE: {
+    BASE_RADIUS: 60, // Base radius of the magic circle
+    RADIUS_INCREASE_PER_LEVEL: 20, // Radius increase per upgrade
+    BASE_DAMAGE: 1, // Base damage per tick
+    DAMAGE_INCREASE_PER_LEVEL: 1, // Damage increase per upgrade
+    ROTATION_SPEED: 0.02, // Speed of rotation (radians per frame)
+    DEPTH: 7, // Render depth
+    COLOR: 0x9932cc // Purple color for magic circle
+  },
   UI: {
     TEXT_STYLE: {
       fontSize: '18px',

@@ -11,6 +11,8 @@ export class ThunderSystem {
   private player: any; // Reference to player
   private thunderTimer: Phaser.Time.TimerEvent | null = null;
   private isActive: boolean = false;
+  private thunderLevel: number = 0;
+  private maxThunderLevel: number = 3;
 
   constructor(scene: Phaser.Scene, enemySystem: EnemySystem, player: any) {
     this.scene = scene;
@@ -65,23 +67,35 @@ export class ThunderSystem {
     const playerX = this.player.x;
     const playerY = this.player.y;
     
-    // Find the enemy closest to the player
-    let targetEnemy = enemies[0];
-    let closestDistance = Number.MAX_VALUE;
+    // Calculate number of strikes based on thunder level
+    const strikeCount = Math.min(this.thunderLevel + 1, enemies.length);
     
-    for (const enemy of enemies) {
+    // Get the closest enemies to target
+    const targetEnemies = this.getClosestEnemies(enemies, playerX, playerY, strikeCount);
+    
+    // Create lightning strikes for each target
+    for (const enemy of targetEnemies) {
+      this.createLightningStrike(enemy.x, enemy.y);
+    }
+  }
+
+  /**
+   * Get the closest enemies to the player
+   */
+  private getClosestEnemies(enemies: any[], playerX: number, playerY: number, count: number): any[] {
+    // Calculate distances and sort enemies by distance
+    const enemiesWithDistance = enemies.map(enemy => {
       const dx = enemy.x - playerX;
       const dy = enemy.y - playerY;
       const distance = Math.sqrt(dx * dx + dy * dy);
-      
-      if (distance < closestDistance) {
-        closestDistance = distance;
-        targetEnemy = enemy;
-      }
-    }
+      return { enemy, distance };
+    });
     
-    // Create lightning strike at the target enemy's position
-    this.createLightningStrike(targetEnemy.x, targetEnemy.y);
+    // Sort by distance (closest first)
+    enemiesWithDistance.sort((a, b) => a.distance - b.distance);
+    
+    // Return the closest enemies
+    return enemiesWithDistance.slice(0, count).map(item => item.enemy);
   }
 
   /**
@@ -277,6 +291,30 @@ export class ThunderSystem {
    */
   isThunderActive(): boolean {
     return this.isActive;
+  }
+
+  /**
+   * Get current thunder level
+   */
+  getThunderLevel(): number {
+    return this.thunderLevel;
+  }
+
+  /**
+   * Increase thunder level
+   */
+  increaseThunderLevel(): void {
+    if (this.thunderLevel < this.maxThunderLevel) {
+      this.thunderLevel++;
+      console.log(`Thunder level increased to ${this.thunderLevel}`);
+    }
+  }
+
+  /**
+   * Get max thunder level
+   */
+  getMaxThunderLevel(): number {
+    return this.maxThunderLevel;
   }
 
   /**

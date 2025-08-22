@@ -31,38 +31,28 @@ export class GameUI {
    * Create instruction text for the player
    */
   private createInstructionText(): void {
-    // Movement instructions
-    this.scene.add.text(16, 16, 'Use WASD or Arrow keys to move', GAME_CONFIG.UI.TEXT_STYLE);
-    
-    // Enemy info
-    this.scene.add.text(16, 40, 'Enemies will spawn around the edges', GAME_CONFIG.UI.TEXT_STYLE);
-    
-    // Health info
-    this.scene.add.text(16, 64, 'Avoid enemies to prevent taking damage', GAME_CONFIG.UI.TEXT_STYLE);
-    
-    // Experience info
-    this.scene.add.text(16, 88, 'Collect cyan orbs for experience', GAME_CONFIG.UI.TEXT_STYLE);
+    // Instructions removed for cleaner UI
   }
   
   /**
    * Create a text display for the enemy counter
    */
   private createEnemyCounterText(): Phaser.GameObjects.Text {
-    return this.scene.add.text(16, 112, 'Enemies: 0', GAME_CONFIG.UI.TEXT_STYLE);
+    return this.scene.add.text(16, 16, 'Enemies: 0', GAME_CONFIG.UI.TEXT_STYLE);
   }
   
   /**
    * Create a text display for player health
    */
   private createHealthText(): Phaser.GameObjects.Text {
-    return this.scene.add.text(16, 136, 'Health: 100/100', GAME_CONFIG.UI.TEXT_STYLE);
+    return this.scene.add.text(16, 40, 'Health: 100/100', GAME_CONFIG.UI.TEXT_STYLE);
   }
   
   /**
    * Create a text display for player level
    */
   private createLevelText(): Phaser.GameObjects.Text {
-    return this.scene.add.text(16, 160, 'Level: 1', GAME_CONFIG.UI.TEXT_STYLE);
+    return this.scene.add.text(16, 64, 'Level: 1', GAME_CONFIG.UI.TEXT_STYLE);
   }
   
   /**

@@ -8,6 +8,7 @@ import { ExperienceSystem } from '../systems/ExperienceSystem';
 import { UpgradeSystem } from '../systems/UpgradeSystem';
 import { UpgradeUI } from '../ui/UpgradeUI';
 import { ThunderSystem } from '../systems/ThunderSystem';
+import { MagicCircleSystem } from '../systems/MagicCircleSystem';
 import { GAME_CONFIG } from '../config/GameConfig';
 
 /**
@@ -22,6 +23,7 @@ export default class MainScene extends Phaser.Scene {
   private experienceSystem!: ExperienceSystem;
   private upgradeSystem!: UpgradeSystem;
   private thunderSystem!: ThunderSystem;
+  private magicCircleSystem!: MagicCircleSystem;
   private gameUI!: GameUI;
   private upgradeUI!: UpgradeUI;
   
@@ -115,8 +117,14 @@ export default class MainScene extends Phaser.Scene {
     // Create thunder system
     this.thunderSystem = new ThunderSystem(this, this.enemySystem, this.player.getSprite());
     
+    // Create magic circle system
+    this.magicCircleSystem = new MagicCircleSystem(this, this.enemySystem, this.player.getSprite());
+    
     // Connect thunder system to upgrade system
     this.upgradeSystem.setThunderSystem(this.thunderSystem);
+    
+    // Connect magic circle system to upgrade system
+    this.upgradeSystem.setMagicCircleSystem(this.magicCircleSystem);
     
     // Set up optimized collisions
     this.setupCollisions();
@@ -337,6 +345,9 @@ export default class MainScene extends Phaser.Scene {
     // Update projectile system
     this.projectileSystem.update();
     
+    // Update magic circle system
+    this.magicCircleSystem.update();
+    
     // Check for collisions between player and enemies
     this.checkPlayerEnemyCollisions();
     
@@ -390,6 +401,10 @@ export default class MainScene extends Phaser.Scene {
     // Clean up systems
     if (this.thunderSystem) {
       this.thunderSystem.cleanup();
+    }
+    
+    if (this.magicCircleSystem) {
+      this.magicCircleSystem.cleanup();
     }
   }
 
@@ -510,6 +525,9 @@ export default class MainScene extends Phaser.Scene {
 
     // Deactivate thunder magic
     this.thunderSystem.deactivate();
+    
+    // Deactivate magic circle
+    this.magicCircleSystem.deactivate();
 
     // Reset player
     this.player.reset();
