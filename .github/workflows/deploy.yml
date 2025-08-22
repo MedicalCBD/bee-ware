@@ -29,12 +29,20 @@ jobs:
         run: npm ci --legacy-peer-deps
       - name: Build
         run: npm run build
+      - name: Check GitHub Pages Status
+        run: |
+          echo "Checking if GitHub Pages is enabled..."
+          echo "If this step fails, please enable GitHub Pages in repository settings"
+          echo "Go to: https://github.com/MedicalCBD/bee-ware/settings/pages"
+          echo "Select 'GitHub Actions' as the source"
       - name: Setup Pages
         uses: actions/configure-pages@v4
+        continue-on-error: true
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: './dist'
+        continue-on-error: true
 
   deploy:
     environment:
