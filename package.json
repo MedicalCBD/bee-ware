@@ -5,8 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build && npm run copy-html",
-    "copy-html": "copy index.html dist\\ && copy game.html dist\\ && xcopy public dist\\public\\ /E /I /Y",
+    "build": "tsc && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",

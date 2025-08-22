@@ -162,32 +162,32 @@ const SkinSelection: React.FC<SkinSelectionProps> = ({
         ))}
       </div>
 
-      {/* Play Button */}
-      <div
-        onClick={() => onStartGame(selectedSkin)}
-        style={{
-          fontSize: '32px',
-          fontWeight: 'bold',
-          color: '#00ff00',
-          textShadow: '2px 2px 4px rgba(0,0,0,0.5), 0 0 20px rgba(0, 255, 0, 0.5)',
-          fontFamily: '"Creepster", "Chiller", "Impact", cursive',
-          letterSpacing: '2px',
-          textTransform: 'uppercase',
-          cursor: 'pointer',
-          transition: 'all 0.3s ease',
-          marginBottom: '20px'
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.transform = 'scale(1.1)';
-          e.currentTarget.style.textShadow = '2px 2px 4px rgba(0,0,0,0.5), 0 0 30px rgba(0, 255, 0, 0.8)';
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.transform = 'scale(1)';
-          e.currentTarget.style.textShadow = '2px 2px 4px rgba(0,0,0,0.5), 0 0 20px rgba(0, 255, 0, 0.5)';
-        }}
-      >
-        Play Game
-      </div>
+              {/* Play Button */}
+        <div
+          onClick={() => onStartGame(selectedSkin)}
+          style={{
+            fontSize: '32px',
+            fontWeight: 'bold',
+            color: '#00ff00',
+            textShadow: '2px 2px 4px rgba(0,0,0,0.5), 0 0 20px rgba(0, 255, 0, 0.5)',
+            fontFamily: '"Creepster", "Chiller", "Impact", cursive',
+            letterSpacing: '2px',
+            textTransform: 'uppercase',
+            cursor: 'pointer',
+            transition: 'all 0.3s ease',
+            marginBottom: '20px'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'scale(1.1)';
+            e.currentTarget.style.textShadow = '2px 2px 4px rgba(0,0,0,0.5), 0 0 30px rgba(0, 255, 0, 0.8)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'scale(1)';
+            e.currentTarget.style.textShadow = '2px 2px 4px rgba(0,0,0,0.5), 0 0 20px rgba(0, 255, 0, 0.5)';
+          }}
+        >
+          Play Game
+        </div>
 
       {/* Instructions */}
       <div style={{

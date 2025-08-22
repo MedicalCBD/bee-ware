@@ -129,18 +129,6 @@ const WalletStatus: React.FC = () => {
          }}>
        {!isConnected ? (
          <div>
-                       <h3 style={{ 
-              margin: '0 0 12px 0', 
-              color: '#00ff00', 
-              fontSize: '16px',
-              fontWeight: 'bold',
-              textTransform: 'uppercase',
-              letterSpacing: '1px',
-              textAlign: 'center'
-            }}>
-              Connect Wallet
-            </h3>
-            
             <button
               onClick={handleConnect}
               style={{
