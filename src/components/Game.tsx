@@ -2,8 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import Phaser from 'phaser';
 import MainScene from '../phaser/scenes/MainScene';
 import SkinSelection from './SkinSelection';
-import DailyGamesUI from './DailyGamesUI';
-import { DailyGamesManager } from '../utils/DailyGamesManager';
 
 // Define available skins
 export interface Skin {
@@ -41,12 +39,6 @@ const Game: React.FC = () => {
   const [selectedSkin, setSelectedSkin] = useState<Skin>(AVAILABLE_SKINS[0]);
 
   const startGame = (skin: Skin) => {
-    // Check if player can play (only in production)
-    if (!DailyGamesManager.canPlayGame()) {
-      alert('You have no games remaining today. Come back tomorrow!');
-      return;
-    }
-
     setSelectedSkin(skin);
     setGameState('playing');
   };
@@ -57,11 +49,6 @@ const Game: React.FC = () => {
       gameRef.current = null;
     }
     setGameState('selection');
-  };
-
-  const handleGameStart = () => {
-    // This will be called by DailyGamesUI when a game starts
-    setGameState('playing');
   };
 
   useEffect(() => {
@@ -114,15 +101,12 @@ const Game: React.FC = () => {
   return (
     <div style={{ width: '100%', height: '100%', position: 'relative' }}>
       {gameState === 'selection' ? (
-        <>
-          <DailyGamesUI onGameStart={handleGameStart} />
-          <SkinSelection 
-            skins={AVAILABLE_SKINS}
-            selectedSkin={selectedSkin}
-            onSkinSelect={setSelectedSkin}
-            onStartGame={startGame}
-          />
-        </>
+        <SkinSelection 
+          skins={AVAILABLE_SKINS}
+          selectedSkin={selectedSkin}
+          onSkinSelect={setSelectedSkin}
+          onStartGame={startGame}
+        />
       ) : (
         <>
           <div ref={gameContainerRef} style={{ width: '100%', height: '100%' }} />

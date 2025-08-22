@@ -1,6 +1,5 @@
 import React from 'react';
 import { Skin } from './Game';
-import { DailyGamesManager } from '../utils/DailyGamesManager';
 
 interface SkinSelectionProps {
   skins: Skin[];
@@ -15,8 +14,6 @@ const SkinSelection: React.FC<SkinSelectionProps> = ({
   onSkinSelect,
   onStartGame
 }) => {
-  const canPlay = DailyGamesManager.canPlayGame();
-  const isDev = DailyGamesManager.isDevelopmentMode();
   return (
     <div style={{
       width: '100%',
@@ -37,11 +34,14 @@ const SkinSelection: React.FC<SkinSelectionProps> = ({
         <h1 style={{
           fontSize: '48px',
           margin: '0 0 10px 0',
-          color: '#ffd700',
-          textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
-          fontWeight: 'bold'
+          color: '#00ff00',
+          textShadow: '2px 2px 4px rgba(0,0,0,0.5), 0 0 20px rgba(0, 255, 0, 0.5)',
+          fontWeight: 'bold',
+          fontFamily: '"Creepster", "Chiller", "Impact", cursive',
+          letterSpacing: '2px',
+          textTransform: 'uppercase'
         }}>
-          BEE-WARE
+          Chain Survivors
         </h1>
         <p style={{
           fontSize: '18px',
@@ -49,28 +49,8 @@ const SkinSelection: React.FC<SkinSelectionProps> = ({
           color: '#cccccc',
           opacity: 0.8
         }}>
-          Choose your bee and start the adventure!
+          Choose your Survivor and start how you die ..or not
         </p>
-        {!isDev && (
-          <p style={{
-            fontSize: '14px',
-            margin: '10px 0 0 0',
-            color: '#ffd700',
-            opacity: 0.9
-          }}>
-            🎮 3 games per day • Reset at midnight
-          </p>
-        )}
-        {isDev && (
-          <p style={{
-            fontSize: '14px',
-            margin: '10px 0 0 0',
-            color: '#00ff00',
-            opacity: 0.9
-          }}>
-            🛠️ Development Mode • Unlimited Games
-          </p>
-        )}
       </div>
 
       {/* Skin Selection */}
@@ -183,38 +163,31 @@ const SkinSelection: React.FC<SkinSelectionProps> = ({
       </div>
 
       {/* Play Button */}
-      <button
+      <div
         onClick={() => onStartGame(selectedSkin)}
-        disabled={!canPlay}
         style={{
-          padding: '15px 40px',
-          fontSize: '24px',
+          fontSize: '32px',
           fontWeight: 'bold',
-          backgroundColor: canPlay ? '#ffd700' : '#666666',
-          color: canPlay ? '#000' : '#999',
-          border: 'none',
-          borderRadius: '25px',
-          cursor: canPlay ? 'pointer' : 'not-allowed',
-          transition: 'all 0.3s ease',
-          boxShadow: canPlay ? '0 4px 15px rgba(255, 215, 0, 0.3)' : 'none',
+          color: '#00ff00',
+          textShadow: '2px 2px 4px rgba(0,0,0,0.5), 0 0 20px rgba(0, 255, 0, 0.5)',
+          fontFamily: '"Creepster", "Chiller", "Impact", cursive',
+          letterSpacing: '2px',
           textTransform: 'uppercase',
-          letterSpacing: '1px'
+          cursor: 'pointer',
+          transition: 'all 0.3s ease',
+          marginBottom: '20px'
         }}
         onMouseEnter={(e) => {
-          if (canPlay) {
-            e.currentTarget.style.transform = 'scale(1.05)';
-            e.currentTarget.style.boxShadow = '0 6px 20px rgba(255, 215, 0, 0.4)';
-          }
+          e.currentTarget.style.transform = 'scale(1.1)';
+          e.currentTarget.style.textShadow = '2px 2px 4px rgba(0,0,0,0.5), 0 0 30px rgba(0, 255, 0, 0.8)';
         }}
         onMouseLeave={(e) => {
-          if (canPlay) {
-            e.currentTarget.style.transform = 'scale(1)';
-            e.currentTarget.style.boxShadow = '0 4px 15px rgba(255, 215, 0, 0.3)';
-          }
+          e.currentTarget.style.transform = 'scale(1)';
+          e.currentTarget.style.textShadow = '2px 2px 4px rgba(0,0,0,0.5), 0 0 20px rgba(0, 255, 0, 0.5)';
         }}
       >
-        {canPlay ? '🎮 Play Game' : 'No Games Left'}
-      </button>
+        Play Game
+      </div>
 
       {/* Instructions */}
       <div style={{
