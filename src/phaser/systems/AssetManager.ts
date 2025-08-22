@@ -14,9 +14,10 @@ export class AssetManager {
   /**
    * Preload all game assets
    */
-  preloadAssets(): void {
-    // Load player sprite
-    this.scene.load.image('player', '/assets/images/game/player.png');
+  preloadAssets(selectedSkin?: { id: string; image: string }): void {
+    // Load player sprite with selected skin
+    const playerImage = selectedSkin?.image || '/assets/images/game/player.png';
+    this.scene.load.image('player', playerImage);
     
     // Load enemy sprite
     this.scene.load.image('enemy', '/assets/images/game/enemy.png');
@@ -118,6 +119,9 @@ export class AssetManager {
     
     // Create magic circle icon (purple)
     this.createIconTexture('magic_icon', 0x9932cc);
+    
+    // Create Mesmer icon (purple star)
+    this.createIconTexture('mesmer_icon', 0x8a2be2);
   }
   
   /**

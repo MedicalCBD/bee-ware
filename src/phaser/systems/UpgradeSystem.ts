@@ -27,6 +27,7 @@ export class UpgradeSystem {
   private magicCircleSystem: MagicCircleSystem | null = null;
   private availableUpgrades: Upgrade[] = [];
   private acquiredUpgrades: Map<string, number> = new Map();
+  private playerSkin: string = 'default';
   
   constructor(_scene: Phaser.Scene, player: Player, projectileSystem: ProjectileSystem) {
     this.player = player;
@@ -48,6 +49,13 @@ export class UpgradeSystem {
    */
   setMagicCircleSystem(magicCircleSystem: MagicCircleSystem): void {
     this.magicCircleSystem = magicCircleSystem;
+  }
+  
+  /**
+   * Set the player skin to determine skin-specific upgrades
+   */
+  setPlayerSkin(skin: string): void {
+    this.playerSkin = skin;
   }
   
   /**
@@ -220,6 +228,43 @@ export class UpgradeSystem {
       }
     });
 
+    // Add Mesmer-specific upgrades
+    this.availableUpgrades.push({
+      id: 'mesmer_trail_size',
+      name: 'Larger Trail',
+      description: 'Increase purple trail circle size by 25%',
+      icon: 'mesmer_icon',
+      level: 0,
+      maxLevel: 3,
+      apply: (player, _projectileSystem) => {
+        player.increaseMesmerTrailSize(0.25);
+      }
+    });
+
+    this.availableUpgrades.push({
+      id: 'mesmer_trail_damage',
+      name: 'Trail Damage',
+      description: 'Increase purple trail damage by 1',
+      icon: 'mesmer_icon',
+      level: 0,
+      maxLevel: 2,
+      apply: (player, _projectileSystem) => {
+        player.increaseMesmerTrailDamage(1);
+      }
+    });
+
+    this.availableUpgrades.push({
+      id: 'mesmer_trail_duration',
+      name: 'Trail Duration',
+      description: 'Increase purple trail duration by 1 second',
+      icon: 'mesmer_icon',
+      level: 0,
+      maxLevel: 2,
+      apply: (player, _projectileSystem) => {
+        player.increaseMesmerTrailDuration(1000);
+      }
+    });
+
     this.availableUpgrades.push({
       id: 'magic_circle_improve_2',
       name: 'Enhanced Circle',
@@ -332,6 +377,14 @@ export class UpgradeSystem {
         }
         return true;
       });
+    }
+    
+    // Filter Mesmer-specific upgrades based on player skin
+    if (this.playerSkin !== 'mesmer') {
+      // Hide Mesmer-specific upgrades if player is not Mesmer
+      availableUpgrades = availableUpgrades.filter(upgrade => 
+        !upgrade.id.startsWith('mesmer_')
+      );
     }
     
     // Shuffle and select upgrades

@@ -26,6 +26,9 @@ export class EnemySystem {
   // Buffer to avoid allocations in update loop
   private vectorBuffer = { x: 0, y: 0 };
   
+  // Track which enemies have been damaged by which trail circles to prevent spam
+  private trailDamageTracker: Map<Phaser.Physics.Arcade.Sprite, Set<Phaser.GameObjects.Graphics>> = new Map();
+  
   constructor(scene: Phaser.Scene, target: Phaser.Physics.Arcade.Sprite, player: Player) {
     this.scene = scene;
     this.target = target;
@@ -39,6 +42,8 @@ export class EnemySystem {
     
     // Set up spawn timer
     this.spawnTimer = this.startSpawnTimer();
+    
+
   }
 
   /**
@@ -172,6 +177,9 @@ export class EnemySystem {
       healthBar.setVisible(false);
     }
     
+    // Clean up trail damage tracker
+    this.trailDamageTracker.delete(enemy);
+    
     this.activeEnemies.delete(enemy);
   }
 
@@ -233,6 +241,9 @@ export class EnemySystem {
         }
       }
     }
+    
+    // Check Mesmer trail collisions
+    this.checkMesmerTrailCollisions();
   }
   
   /**
@@ -473,6 +484,9 @@ export class EnemySystem {
       healthBar.destroy();
     }
     this.healthBars.clear();
+    
+    // Clean up trail damage tracker
+    this.trailDamageTracker.clear();
   }
 
   /**
@@ -521,5 +535,35 @@ export class EnemySystem {
       healthBar.destroy();
     }
     this.healthBars.clear();
+  }
+  
+  /**
+   * Check collisions with Mesmer trail circles
+   */
+  checkMesmerTrailCollisions(): void {
+    const trailCircles = this.player.getMesmerTrailCircles();
+    
+    for (const circle of trailCircles) {
+      for (const enemy of this.activeEnemies) {
+        if (enemy.active && enemy.visible) {
+          const distance = Phaser.Math.Distance.Between(circle.x, circle.y, enemy.x, enemy.y);
+          
+          if (distance <= circle.radius) {
+            // Check if this enemy has already been damaged by this circle
+            let damagedCircles = this.trailDamageTracker.get(enemy);
+            if (!damagedCircles) {
+              damagedCircles = new Set();
+              this.trailDamageTracker.set(enemy, damagedCircles);
+            }
+            
+            // Only damage if this circle hasn't damaged this enemy yet
+            if (!damagedCircles.has(circle.graphics)) {
+              damagedCircles.add(circle.graphics);
+              this.damageEnemy(enemy, circle.damage);
+            }
+          }
+        }
+      }
+    }
   }
 } 

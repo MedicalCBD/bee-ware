@@ -49,9 +49,21 @@ export class Player {
   private level: number = 1;
   private experienceToNextLevel: number = 25; // Base experience needed for level 2
   private isLevelingUp: boolean = false;
+  
+  // Skin and special abilities
+  private selectedSkin: string = 'default';
+  private healthRegenerationTimer: Phaser.Time.TimerEvent | null = null;
+  private mesmerTrailTimer: Phaser.Time.TimerEvent | null = null;
+  private mesmerTrailCircles: Array<{ graphics: Phaser.GameObjects.Graphics; x: number; y: number; radius: number; damage: number }> = [];
+  
+  // Mesmer trail upgrades
+  private mesmerTrailSizeMultiplier: number = 1.0;
+  private mesmerTrailDamage: number = 1;
+  private mesmerTrailDuration: number = 3000; // 3 seconds default
 
-  constructor(scene: Phaser.Scene, x: number, y: number) {
+  constructor(scene: Phaser.Scene, x: number, y: number, skinId: string = 'default') {
     this.scene = scene;
+    this.selectedSkin = skinId;
     this.sprite = this.createSprite(x, y);
     this.setupInput();
     
@@ -61,6 +73,9 @@ export class Player {
     
     // Listen for experience collection events
     this.scene.events.on('experience-collected', this.onExperienceCollected, this);
+    
+    // Setup skin-specific abilities
+    this.setupSkinAbilities();
   }
 
   /**
@@ -85,6 +100,117 @@ export class Player {
     sprite.setDrag(0);
     
     return sprite;
+  }
+
+  /**
+   * Setup skin-specific abilities
+   */
+  private setupSkinAbilities(): void {
+    if (this.selectedSkin === 'wizard') {
+      // Wizard gets health regeneration (1 HP per second)
+      this.healthRegenerationTimer = this.scene.time.addEvent({
+        delay: 1000, // 1 second
+        callback: this.regenerateHealth,
+        callbackScope: this,
+        loop: true
+      });
+    } else if (this.selectedSkin === 'mesmer') {
+      // Mesmer gets slower health regeneration (1 HP per 2 seconds)
+      this.healthRegenerationTimer = this.scene.time.addEvent({
+        delay: 2000, // 2 seconds
+        callback: this.regenerateHealth,
+        callbackScope: this,
+        loop: true
+      });
+      
+      // Mesmer creates purple trail circles that damage enemies
+      this.mesmerTrailTimer = this.scene.time.addEvent({
+        delay: 500, // Create trail every 500ms
+        callback: this.createMesmerTrail,
+        callbackScope: this,
+        loop: true
+      });
+    }
+  }
+
+  /**
+   * Regenerate health (Wizard/Mesmer ability)
+   */
+  private regenerateHealth(): void {
+    if (this.health < this.maxHealth) {
+      this.health = Math.min(this.health + 1, this.maxHealth);
+      
+      // Emit event to update UI
+      this.scene.events.emit('player-health-changed', this.health, this.maxHealth);
+    }
+  }
+  
+  /**
+   * Create purple trail circle (Mesmer ability)
+   */
+  private createMesmerTrail(): void {
+    // Only create trail if player is moving
+    if (this.sprite.body && (this.sprite.body.velocity.x !== 0 || this.sprite.body.velocity.y !== 0)) {
+      const graphics = this.scene.add.graphics();
+      graphics.setDepth(this.sprite.depth - 1); // Behind the player
+      
+      // Position at player's current position
+      const x = this.sprite.x;
+      const y = this.sprite.y;
+      const radius = 15 * this.mesmerTrailSizeMultiplier;
+      
+      // Draw purple circle
+      graphics.fillStyle(0x8a2be2, 0.6); // Purple with transparency
+      graphics.fillCircle(x, y, radius);
+      graphics.lineStyle(2, 0x9932cc, 0.8);
+      graphics.strokeCircle(x, y, radius);
+      
+      // Create trail circle object with damage property
+      const trailCircle = { graphics, x, y, radius, damage: this.mesmerTrailDamage };
+      
+      // Add to trail array
+      this.mesmerTrailCircles.push(trailCircle);
+      
+      // Remove circle after configured duration
+      this.scene.time.delayedCall(this.mesmerTrailDuration, () => {
+        const index = this.mesmerTrailCircles.indexOf(trailCircle);
+        if (index > -1) {
+          this.mesmerTrailCircles.splice(index, 1);
+        }
+        graphics.destroy();
+      });
+    }
+  }
+  
+  /**
+   * Get active Mesmer trail circles for collision detection
+   */
+  getMesmerTrailCircles(): Array<{ graphics: Phaser.GameObjects.Graphics; x: number; y: number; radius: number; damage: number }> {
+    return this.mesmerTrailCircles;
+  }
+  
+  /**
+   * Increase Mesmer trail size
+   */
+  increaseMesmerTrailSize(multiplier: number): void {
+    this.mesmerTrailSizeMultiplier += multiplier;
+    console.log(`Mesmer trail size increased to ${this.mesmerTrailSizeMultiplier}x`);
+  }
+  
+  /**
+   * Increase Mesmer trail damage
+   */
+  increaseMesmerTrailDamage(amount: number): void {
+    this.mesmerTrailDamage += amount;
+    console.log(`Mesmer trail damage increased to ${this.mesmerTrailDamage}`);
+  }
+  
+  /**
+   * Increase Mesmer trail duration
+   */
+  increaseMesmerTrailDuration(ms: number): void {
+    this.mesmerTrailDuration += ms;
+    console.log(`Mesmer trail duration increased to ${this.mesmerTrailDuration}ms`);
   }
 
   /**
@@ -691,5 +817,48 @@ export class Player {
    */
   isInLevelUpState(): boolean {
     return this.isLevelingUp;
+  }
+  
+  /**
+   * Clean up resources when player is destroyed
+   */
+  destroy(): void {
+    // Clean up timers
+    if (this.healthRegenerationTimer) {
+      this.healthRegenerationTimer.destroy();
+      this.healthRegenerationTimer = null;
+    }
+    
+    if (this.mesmerTrailTimer) {
+      this.mesmerTrailTimer.destroy();
+      this.mesmerTrailTimer = null;
+    }
+    
+    if (this.attackTimer) {
+      this.attackTimer.destroy();
+      this.attackTimer = null;
+    }
+    
+    if (this.invulnerableTimer) {
+      this.invulnerableTimer.destroy();
+      this.invulnerableTimer = null;
+    }
+    
+    if (this.damageTimer) {
+      this.damageTimer.destroy();
+      this.damageTimer = null;
+    }
+    
+    // Clean up trail circles
+    this.mesmerTrailCircles.forEach(circle => circle.graphics.destroy());
+    this.mesmerTrailCircles = [];
+    
+    // Remove event listeners
+    this.scene.events.off('experience-collected', this.onExperienceCollected, this);
+    
+    // Destroy sprite
+    if (this.sprite) {
+      this.sprite.destroy();
+    }
   }
 } 

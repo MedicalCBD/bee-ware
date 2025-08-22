@@ -35,9 +35,19 @@ export default class MainScene extends Phaser.Scene {
   // Performance tracking
   private perfText!: Phaser.GameObjects.Text;
   private lastFpsUpdate: number = 0;
+  
+  // Skin selection
+  private selectedSkin: { id: string; image: string } = { id: 'default', image: '/assets/images/game/player.png' };
 
   constructor() {
     super({ key: 'MainScene' });
+  }
+
+  /**
+   * Set the selected skin for the player
+   */
+  setSelectedSkin(skin: { id: string; image: string }): void {
+    this.selectedSkin = skin;
   }
 
   /**
@@ -46,7 +56,7 @@ export default class MainScene extends Phaser.Scene {
   preload(): void {
     // Initialize asset manager and load assets
     this.assetManager = new AssetManager(this);
-    this.assetManager.preloadAssets();
+    this.assetManager.preloadAssets(this.selectedSkin);
     
     // Create a circular texture for projectiles
     this.createProjectileTexture();
@@ -92,8 +102,8 @@ export default class MainScene extends Phaser.Scene {
     // Create projectile system
     this.projectileSystem = new ProjectileSystem(this);
     
-    // Create player at center of screen
-    this.player = new Player(this, centerX, centerY);
+    // Create player at center of screen with selected skin
+    this.player = new Player(this, centerX, centerY, this.selectedSkin.id);
     
     // Set up camera to follow player
     this.cameras.main.startFollow(this.player.getSprite(), true, 0.1, 0.1);
@@ -113,6 +123,9 @@ export default class MainScene extends Phaser.Scene {
     
     // Create upgrade system
     this.upgradeSystem = new UpgradeSystem(this, this.player, this.projectileSystem);
+    
+    // Set player skin for skin-specific upgrades
+    this.upgradeSystem.setPlayerSkin(this.selectedSkin.id);
     
     // Create thunder system
     this.thunderSystem = new ThunderSystem(this, this.enemySystem, this.player.getSprite());

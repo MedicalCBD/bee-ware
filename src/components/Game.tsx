@@ -1,15 +1,68 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Phaser from 'phaser';
 import MainScene from '../phaser/scenes/MainScene';
+import SkinSelection from './SkinSelection';
+
+// Define available skins
+export interface Skin {
+  id: string;
+  name: string;
+  image: string;
+  preview: string;
+}
+
+export const AVAILABLE_SKINS: Skin[] = [
+  {
+    id: 'default',
+    name: 'Survivor',
+    image: '/assets/images/game/player.png',
+    preview: '/assets/images/game/player.png'
+  },
+  {
+    id: 'wizard',
+    name: 'Wizard',
+    image: '/assets/images/game/wizard.png',
+    preview: '/assets/images/game/wizard.png'
+  },
+  {
+    id: 'mesmer',
+    name: 'Mesmer',
+    image: '/assets/images/game/Mesmer.png',
+    preview: '/assets/images/game/Mesmer.png'
+  }
+];
 
 const Game: React.FC = () => {
   const gameRef = useRef<Phaser.Game | null>(null);
   const gameContainerRef = useRef<HTMLDivElement>(null);
+  const [gameState, setGameState] = useState<'selection' | 'playing'>('selection');
+  const [selectedSkin, setSelectedSkin] = useState<Skin>(AVAILABLE_SKINS[0]);
+
+  const startGame = (skin: Skin) => {
+    setSelectedSkin(skin);
+    setGameState('playing');
+  };
+
+  const stopGame = () => {
+    if (gameRef.current) {
+      gameRef.current.destroy(true);
+      gameRef.current = null;
+    }
+    setGameState('selection');
+  };
 
   useEffect(() => {
-    // Only create the game once
-    if (gameRef.current !== null) {
+    // Only create the game when in playing state
+    if (gameState !== 'playing' || gameRef.current !== null) {
       return;
+    }
+
+    // Create a custom scene class that knows about the selected skin
+    class GameScene extends MainScene {
+      constructor() {
+        super();
+        this.setSelectedSkin(selectedSkin);
+      }
     }
 
     // Game configuration
@@ -26,7 +79,7 @@ const Game: React.FC = () => {
         }
       },
       backgroundColor: '#1d1805',
-      scene: [MainScene],
+      scene: [GameScene],
       scale: {
         mode: Phaser.Scale.FIT,
         autoCenter: Phaser.Scale.CENTER_BOTH
@@ -43,9 +96,43 @@ const Game: React.FC = () => {
         gameRef.current = null;
       }
     };
-  }, []);
+  }, [gameState, selectedSkin]);
 
-  return <div ref={gameContainerRef} style={{ width: '100%', height: '100%' }} />;
+  return (
+    <div style={{ width: '100%', height: '100%', position: 'relative' }}>
+      {gameState === 'selection' ? (
+        <SkinSelection 
+          skins={AVAILABLE_SKINS}
+          selectedSkin={selectedSkin}
+          onSkinSelect={setSelectedSkin}
+          onStartGame={startGame}
+        />
+      ) : (
+        <>
+          <div ref={gameContainerRef} style={{ width: '100%', height: '100%' }} />
+          <button
+            onClick={stopGame}
+            style={{
+              position: 'absolute',
+              top: '20px',
+              right: '20px',
+              padding: '10px 20px',
+              backgroundColor: '#ff4444',
+              color: 'white',
+              border: 'none',
+              borderRadius: '5px',
+              cursor: 'pointer',
+              fontSize: '16px',
+              fontWeight: 'bold',
+              zIndex: 1000
+            }}
+          >
+            Exit Game
+          </button>
+        </>
+      )}
+    </div>
+  );
 };
 
 export default Game; 
