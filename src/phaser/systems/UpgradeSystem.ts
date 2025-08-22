@@ -131,7 +131,7 @@ export class UpgradeSystem {
       icon: 'thunder_icon',
       level: 0,
       maxLevel: 1,
-      apply: (player, _projectileSystem, thunderSystem) => {
+      apply: (_player, _projectileSystem, thunderSystem) => {
         if (thunderSystem) {
           thunderSystem.activate();
         }
@@ -204,7 +204,7 @@ export class UpgradeSystem {
     }
     
     // Apply the upgrade effect
-    upgrade.apply(this.player, this.projectileSystem, this.thunderSystem);
+    upgrade.apply(this.player, this.projectileSystem, this.thunderSystem || undefined);
     
     // Update acquired upgrades
     this.acquiredUpgrades.set(upgradeId, currentLevel + 1);
