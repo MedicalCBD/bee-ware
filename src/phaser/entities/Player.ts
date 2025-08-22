@@ -156,18 +156,42 @@ export class Player {
     // Only create trail if player is moving
     if (this.sprite.body && (this.sprite.body.velocity.x !== 0 || this.sprite.body.velocity.y !== 0)) {
       const graphics = this.scene.add.graphics();
-      graphics.setDepth(this.sprite.depth - 1); // Behind the player
+      graphics.setDepth(3); // Behind enemies (enemies are at depth 5)
       
       // Position at player's current position
       const x = this.sprite.x;
       const y = this.sprite.y;
       const radius = 15;
       
-      // Draw purple circle
-      graphics.fillStyle(0x8a2be2, 0.6); // Purple with transparency
+      // Draw improved purple circle with better visual appeal and sparkles
+      graphics.fillStyle(0x8a2be2, 0.8); // Brighter purple with more opacity
       graphics.fillCircle(x, y, radius);
-      graphics.lineStyle(2, 0x9932cc, 0.8);
+      
+      // Add a glowing border
+      graphics.lineStyle(3, 0xda70d6, 0.9); // Bright purple border
       graphics.strokeCircle(x, y, radius);
+      
+      // Add inner highlight
+      graphics.fillStyle(0xda70d6, 0.4); // Inner glow
+      graphics.fillCircle(x, y, radius * 0.7);
+      
+      // Add sparkles/brillos around the circle
+      graphics.fillStyle(0xffffff, 0.9); // White sparkles
+      for (let i = 0; i < 6; i++) {
+        const angle = (i * Math.PI) / 3;
+        const sparkleX = x + Math.cos(angle) * (radius + 5);
+        const sparkleY = y + Math.sin(angle) * (radius + 5);
+        graphics.fillCircle(sparkleX, sparkleY, 2);
+      }
+      
+      // Add inner sparkles
+      graphics.fillStyle(0xda70d6, 0.8); // Purple inner sparkles
+      for (let i = 0; i < 4; i++) {
+        const angle = (i * Math.PI) / 2 + Math.PI / 4;
+        const sparkleX = x + Math.cos(angle) * (radius * 0.5);
+        const sparkleY = y + Math.sin(angle) * (radius * 0.5);
+        graphics.fillCircle(sparkleX, sparkleY, 1.5);
+      }
       
       // Create trail circle object
       const trailCircle = { graphics, x, y, radius };

@@ -362,6 +362,9 @@ export default class MainScene extends Phaser.Scene {
     // Check for collisions between player and enemies
     this.checkPlayerEnemyCollisions();
     
+    // Check for collisions with Mesmer trail circles
+    this.enemySystem.checkMesmerTrailCollisions();
+    
     // Update UI elements
     this.updateUI();
     
