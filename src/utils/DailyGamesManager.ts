@@ -125,7 +125,7 @@ export class DailyGamesManager {
    * Get the maximum games per day for display
    */
   static getMaxGamesPerDayDisplay(): number {
-    return this.isDevelopment() ? this.MAX_GAMES_PER_DAY : this.MAX_GAMES_PER_DAY;
+    return this.MAX_GAMES_PER_DAY; // Always show 3 for display purposes
   }
 
   /**
