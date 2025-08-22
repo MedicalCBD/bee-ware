@@ -12,6 +12,7 @@ export class UpgradeUI {
   private titleText: Phaser.GameObjects.Text;
   private upgradeCards: Phaser.GameObjects.Container[] = [];
   private isVisible: boolean = false;
+  private isProcessingSelection: boolean = false;
   private onUpgradeSelected: (upgradeId: string) => void;
   
   constructor(scene: Phaser.Scene, upgradeSystem: UpgradeSystem) {
@@ -69,6 +70,9 @@ export class UpgradeUI {
   show(count: number = 3, callback: (upgradeId: string) => void): void {
     if (this.isVisible) return;
     
+    // Reset processing flag
+    this.isProcessingSelection = false;
+    
     // Store callback
     this.onUpgradeSelected = callback;
     
@@ -100,6 +104,9 @@ export class UpgradeUI {
    */
   hide(): void {
     if (!this.isVisible) return;
+    
+    // Reset processing flag
+    this.isProcessingSelection = false;
     
     // Animate out
     this.animateOut(() => {
@@ -210,6 +217,7 @@ export class UpgradeUI {
         cardWidth - 40, 50,
         0x00aa00, 1
       );
+      selectButton.setName('selectButton');
       selectButton.setStrokeStyle(2, 0xffffff);
       selectButton.setInteractive({ useHandCursor: true });
       selectButton.setScrollFactor(0); // Don't scroll with camera
@@ -244,6 +252,19 @@ export class UpgradeUI {
       
       // Add click handler
       selectButton.on('pointerdown', () => {
+        // Prevent multiple clicks
+        if (this.isProcessingSelection) return;
+        
+        this.isProcessingSelection = true;
+        
+        // Disable all buttons to prevent further clicks
+        this.upgradeCards.forEach(card => {
+          const button = card.getByName('selectButton') as Phaser.GameObjects.Rectangle;
+          if (button) {
+            button.disableInteractive();
+          }
+        });
+        
         this.onUpgradeSelected(upgrade.id);
         this.hide();
       });
