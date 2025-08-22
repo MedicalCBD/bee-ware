@@ -73,7 +73,14 @@ export class DailyGamesManager {
   static getGamesRemainingToday(): number {
     const gamesPlayed = this.getGamesPlayedToday();
     const maxGames = this.getMaxGamesPerDay();
-    return Math.max(0, maxGames - gamesPlayed);
+    const remaining = Math.max(0, maxGames - gamesPlayed);
+    
+    // In development, cap the display at the normal max (3) but allow unlimited actual games
+    if (this.isDevelopment()) {
+      return Math.min(remaining, this.MAX_GAMES_PER_DAY);
+    }
+    
+    return remaining;
   }
 
   /**
