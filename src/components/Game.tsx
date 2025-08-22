@@ -15,20 +15,20 @@ export const AVAILABLE_SKINS: Skin[] = [
   {
     id: 'default',
     name: 'Survivor',
-          image: '/assets/images/game/player1.png',
-      preview: '/assets/images/game/player1.png'
+    image: '/assets/images/game/player1.png',
+    preview: '/assets/images/game/player1intro.png'
   },
   {
     id: 'wizard',
     name: 'Wizard',
     image: '/assets/images/game/wizard1.png',
-    preview: '/assets/images/game/wizard1.png'
+    preview: '/assets/images/game/wizard1intro.png'
   },
   {
     id: 'mesmer',
     name: 'Mesmer',
     image: '/assets/images/game/mesmer1.png',
-    preview: '/assets/images/game/mesmer1.png'
+    preview: '/assets/images/game/mesmer1intro.png'
   }
 ];
 

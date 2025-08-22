@@ -67,7 +67,7 @@ const SkinSelection: React.FC<SkinSelectionProps> = ({
             onClick={() => onSkinSelect(skin)}
             style={{
               width: '150px',
-              height: '200px',
+              height: '220px',
               border: selectedSkin.id === skin.id ? '3px solid #ffd700' : '2px solid #666',
               borderRadius: '15px',
               padding: '15px',
@@ -77,7 +77,7 @@ const SkinSelection: React.FC<SkinSelectionProps> = ({
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
-              justifyContent: 'center',
+              justifyContent: 'flex-start',
               position: 'relative',
               overflow: 'hidden'
             }}
@@ -94,6 +94,7 @@ const SkinSelection: React.FC<SkinSelectionProps> = ({
             <div style={{
               width: '80px',
               height: '80px',
+              marginTop: '10px',
               marginBottom: '15px',
               display: 'flex',
               alignItems: 'center',
@@ -114,67 +115,95 @@ const SkinSelection: React.FC<SkinSelectionProps> = ({
               />
             </div>
 
-                         {/* Skin Name */}
-             <h3 style={{
-               margin: '0',
-               fontSize: '16px',
-               fontWeight: 'bold',
-               textAlign: 'center',
-               color: selectedSkin.id === skin.id ? '#ffd700' : '#ffffff'
-             }}>
-               {skin.name}
-             </h3>
-             
-                           {/* Special Ability */}
-              <p style={{
-                margin: '5px 0 0 0',
-                fontSize: '12px',
-                textAlign: 'center',
-                color: '#cccccc',
-                opacity: 0.8
+            {/* Skin Name */}
+            <h3 style={{
+              margin: '0',
+              fontSize: '16px',
+              fontWeight: 'bold',
+              textAlign: 'center',
+              color: selectedSkin.id === skin.id ? '#ffd700' : '#ffffff'
+            }}>
+              {skin.name}
+            </h3>
+            
+            {/* Special Ability */}
+            <p style={{
+              margin: '5px 0 0 0',
+              fontSize: '12px',
+              textAlign: 'center',
+              color: '#cccccc',
+              opacity: 0.8
+            }}>
+              {skin.id === 'wizard' ? '✨ HP Regen +1/s' : 
+               skin.id === 'mesmer' ? '🔮 HP Regen +1/2s + Purple Trail' : 
+               '⚔️ Balanced'}
+            </p>
+            
+            {/* FREE for Survivor */}
+            {skin.id === 'default' && (
+              <div style={{
+                position: 'absolute',
+                bottom: '10px',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                padding: '4px 8px',
+                backgroundColor: '#1a1a1a',
+                border: '1px solid #666666',
+                borderRadius: '4px',
+                width: 'fit-content',
+                fontSize: '10px',
+                color: '#ffffff',
+                fontFamily: 'monospace',
+                fontWeight: 'bold',
+                textAlign: 'center'
               }}>
-                {skin.id === 'wizard' ? '✨ HP Regen +1/s' : 
-                 skin.id === 'mesmer' ? '🔮 HP Regen +1/2s + Purple Trail' : 
-                 '⚔️ Balanced'}
-              </p>
-              
-              {/* ETH Price for Wizard */}
-              {skin.id === 'wizard' && (
-                <div style={{
-                  margin: '8px auto 0 auto',
-                  padding: '4px 8px',
-                  backgroundColor: '#1a1a1a',
-                  border: '1px solid #666666',
-                  borderRadius: '4px',
-                  width: 'fit-content',
-                  fontSize: '10px',
-                  color: '#ffffff',
-                  fontFamily: 'monospace',
-                  fontWeight: 'bold',
-                  textAlign: 'center'
-                }}>
-                  eth 0,0024
-                </div>
-              )}
-              
-              {/* ETH Price for Mesmer */}
-              {skin.id === 'mesmer' && (
-                <div style={{
-                  margin: '8px auto 0 auto',
-                  padding: '4px 8px',
-                  backgroundColor: '#1a1a1a',
-                  border: '1px solid #666666',
-                  borderRadius: '4px',
-                  width: 'fit-content',
-                  fontSize: '10px',
-                  color: '#ffffff',
-                  fontFamily: 'monospace',
-                  fontWeight: 'bold',
-                  textAlign: 'center'
-                }}>
-                  eth 0,0037
-                </div>
-              )}
+                FREE
+              </div>
+            )}
+            
+            {/* ETH Price for Wizard */}
+            {skin.id === 'wizard' && (
+              <div style={{
+                position: 'absolute',
+                bottom: '10px',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                padding: '4px 8px',
+                backgroundColor: '#1a1a1a',
+                border: '1px solid #666666',
+                borderRadius: '4px',
+                width: 'fit-content',
+                fontSize: '10px',
+                color: '#ffffff',
+                fontFamily: 'monospace',
+                fontWeight: 'bold',
+                textAlign: 'center'
+              }}>
+                eth 0,0024
+              </div>
+            )}
+            
+            {/* ETH Price for Mesmer */}
+            {skin.id === 'mesmer' && (
+              <div style={{
+                position: 'absolute',
+                bottom: '10px',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                padding: '4px 8px',
+                backgroundColor: '#1a1a1a',
+                border: '1px solid #666666',
+                borderRadius: '4px',
+                width: 'fit-content',
+                fontSize: '10px',
+                color: '#ffffff',
+                fontFamily: 'monospace',
+                fontWeight: 'bold',
+                textAlign: 'center'
+              }}>
+                eth 0,0037
+              </div>
+            )}
 
             {/* Selection Indicator */}
             {selectedSkin.id === skin.id && (
