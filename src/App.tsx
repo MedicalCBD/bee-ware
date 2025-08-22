@@ -1,7 +1,7 @@
 import React from 'react';
 import './styles/App.css';
 import Game from './components/Game';
-import AbstractWalletWrapper from './components/AbstractWalletWrapper';
+import AbstractProvider from './components/AbstractProvider';
 import WalletStatus from './components/WalletStatus';
 
 // Define public paths for images
@@ -10,7 +10,7 @@ const borderImage = '/assets/images/ui/beeware-border.png';
 
 const App: React.FC = () => {
   return (
-    <AbstractWalletWrapper>
+    <AbstractProvider>
       <div className="App">
         <WalletStatus />
         <main>
@@ -33,7 +33,7 @@ const App: React.FC = () => {
           </div>
         </main>
       </div>
-    </AbstractWalletWrapper>
+    </AbstractProvider>
   );
 }
 

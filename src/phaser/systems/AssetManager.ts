@@ -119,9 +119,6 @@ export class AssetManager {
     
     // Create magic circle icon (purple)
     this.createIconTexture('magic_icon', 0x9932cc);
-    
-    // Create Mesmer icon (purple star)
-    this.createIconTexture('mesmer_icon', 0x8a2be2);
   }
   
   /**

@@ -124,9 +124,6 @@ export default class MainScene extends Phaser.Scene {
     // Create upgrade system
     this.upgradeSystem = new UpgradeSystem(this, this.player, this.projectileSystem);
     
-    // Set player skin for skin-specific upgrades
-    this.upgradeSystem.setPlayerSkin(this.selectedSkin.id);
-    
     // Create thunder system
     this.thunderSystem = new ThunderSystem(this, this.enemySystem, this.player.getSprite());
     

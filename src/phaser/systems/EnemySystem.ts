@@ -559,7 +559,7 @@ export class EnemySystem {
             // Only damage if this circle hasn't damaged this enemy yet
             if (!damagedCircles.has(circle.graphics)) {
               damagedCircles.add(circle.graphics);
-              this.damageEnemy(enemy, circle.damage);
+              this.damageEnemy(enemy, 1);
             }
           }
         }

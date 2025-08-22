@@ -54,12 +54,7 @@ export class Player {
   private selectedSkin: string = 'default';
   private healthRegenerationTimer: Phaser.Time.TimerEvent | null = null;
   private mesmerTrailTimer: Phaser.Time.TimerEvent | null = null;
-  private mesmerTrailCircles: Array<{ graphics: Phaser.GameObjects.Graphics; x: number; y: number; radius: number; damage: number }> = [];
-  
-  // Mesmer trail upgrades
-  private mesmerTrailSizeMultiplier: number = 1.0;
-  private mesmerTrailDamage: number = 1;
-  private mesmerTrailDuration: number = 3000; // 3 seconds default
+  private mesmerTrailCircles: Array<{ graphics: Phaser.GameObjects.Graphics; x: number; y: number; radius: number }> = [];
 
   constructor(scene: Phaser.Scene, x: number, y: number, skinId: string = 'default') {
     this.scene = scene;
@@ -157,7 +152,7 @@ export class Player {
       // Position at player's current position
       const x = this.sprite.x;
       const y = this.sprite.y;
-      const radius = 15 * this.mesmerTrailSizeMultiplier;
+      const radius = 15;
       
       // Draw purple circle
       graphics.fillStyle(0x8a2be2, 0.6); // Purple with transparency
@@ -165,14 +160,14 @@ export class Player {
       graphics.lineStyle(2, 0x9932cc, 0.8);
       graphics.strokeCircle(x, y, radius);
       
-      // Create trail circle object with damage property
-      const trailCircle = { graphics, x, y, radius, damage: this.mesmerTrailDamage };
+      // Create trail circle object
+      const trailCircle = { graphics, x, y, radius };
       
       // Add to trail array
       this.mesmerTrailCircles.push(trailCircle);
       
-      // Remove circle after configured duration
-      this.scene.time.delayedCall(this.mesmerTrailDuration, () => {
+      // Remove circle after 3 seconds
+      this.scene.time.delayedCall(3000, () => {
         const index = this.mesmerTrailCircles.indexOf(trailCircle);
         if (index > -1) {
           this.mesmerTrailCircles.splice(index, 1);
@@ -185,32 +180,8 @@ export class Player {
   /**
    * Get active Mesmer trail circles for collision detection
    */
-  getMesmerTrailCircles(): Array<{ graphics: Phaser.GameObjects.Graphics; x: number; y: number; radius: number; damage: number }> {
+  getMesmerTrailCircles(): Array<{ graphics: Phaser.GameObjects.Graphics; x: number; y: number; radius: number }> {
     return this.mesmerTrailCircles;
-  }
-  
-  /**
-   * Increase Mesmer trail size
-   */
-  increaseMesmerTrailSize(multiplier: number): void {
-    this.mesmerTrailSizeMultiplier += multiplier;
-    console.log(`Mesmer trail size increased to ${this.mesmerTrailSizeMultiplier}x`);
-  }
-  
-  /**
-   * Increase Mesmer trail damage
-   */
-  increaseMesmerTrailDamage(amount: number): void {
-    this.mesmerTrailDamage += amount;
-    console.log(`Mesmer trail damage increased to ${this.mesmerTrailDamage}`);
-  }
-  
-  /**
-   * Increase Mesmer trail duration
-   */
-  increaseMesmerTrailDuration(ms: number): void {
-    this.mesmerTrailDuration += ms;
-    console.log(`Mesmer trail duration increased to ${this.mesmerTrailDuration}ms`);
   }
 
   /**
