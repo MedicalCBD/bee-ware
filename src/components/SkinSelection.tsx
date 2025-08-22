@@ -137,6 +137,44 @@ const SkinSelection: React.FC<SkinSelectionProps> = ({
                  skin.id === 'mesmer' ? '🔮 HP Regen +1/2s + Purple Trail' : 
                  '⚔️ Balanced'}
               </p>
+              
+              {/* ETH Price for Wizard */}
+              {skin.id === 'wizard' && (
+                <div style={{
+                  margin: '8px auto 0 auto',
+                  padding: '4px 8px',
+                  backgroundColor: '#1a1a1a',
+                  border: '1px solid #666666',
+                  borderRadius: '4px',
+                  width: 'fit-content',
+                  fontSize: '10px',
+                  color: '#ffffff',
+                  fontFamily: 'monospace',
+                  fontWeight: 'bold',
+                  textAlign: 'center'
+                }}>
+                  eth 0,0024
+                </div>
+              )}
+              
+              {/* ETH Price for Mesmer */}
+              {skin.id === 'mesmer' && (
+                <div style={{
+                  margin: '8px auto 0 auto',
+                  padding: '4px 8px',
+                  backgroundColor: '#1a1a1a',
+                  border: '1px solid #666666',
+                  borderRadius: '4px',
+                  width: 'fit-content',
+                  fontSize: '10px',
+                  color: '#ffffff',
+                  fontFamily: 'monospace',
+                  fontWeight: 'bold',
+                  textAlign: 'center'
+                }}>
+                  eth 0,0037
+                </div>
+              )}
 
             {/* Selection Indicator */}
             {selectedSkin.id === skin.id && (
