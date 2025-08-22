@@ -10,7 +10,7 @@ export const GAME_CONFIG = {
   },
   PLAYER: {
     SPEED: 200,
-    SCALE: 0.5,
+    SCALE: 2.0,
     DEPTH: 10,
     HITBOX_SCALE: 0.8,
     ATTACK_INTERVAL: 500, // ms between attacks
@@ -29,13 +29,13 @@ export const GAME_CONFIG = {
   },
   ENEMY: {
     SPEED: 120,
-    SCALE: 0.4,
+    SCALE: 0.6,
     DEPTH: 5,
     SPAWN_INTERVAL: 1000, // ms between spawns
     MAX_COUNT: 50,
     SPAWN_PADDING: 20, // Distance from edge
     HITBOX_SCALE: 0.8,
-    TINT: 0xff0000,
+    TINT: 0xffffff,
     MAX_HEALTH: 3, // Number of hits to defeat an enemy
     DAMAGE_TINT: 0xff8800, // Orange tint when damaged
     KNOCKBACK_FORCE: 150, // Force applied when hit

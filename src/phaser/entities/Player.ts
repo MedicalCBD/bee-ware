@@ -77,7 +77,14 @@ export class Player {
    * Create and configure the player sprite
    */
   private createSprite(x: number, y: number): Phaser.Physics.Arcade.Sprite {
-    const sprite = this.scene.physics.add.sprite(x, y, 'player');
+    // Determine which texture to use based on skin
+    let textureKey = 'player';
+    if (this.selectedSkin === 'wizard') {
+      textureKey = 'wizard';
+    } else if (this.selectedSkin === 'mesmer') {
+      textureKey = 'mesmer';
+    }
+    const sprite = this.scene.physics.add.sprite(x, y, textureKey);
     
     sprite.setScale(GAME_CONFIG.PLAYER.SCALE);
     sprite.setDepth(GAME_CONFIG.PLAYER.DEPTH);
@@ -89,10 +96,12 @@ export class Player {
         sprite.width * GAME_CONFIG.PLAYER.HITBOX_SCALE, 
         sprite.height * GAME_CONFIG.PLAYER.HITBOX_SCALE
       );
+      
+      // Optimize physics for smoother movement
+      sprite.body.setBounce(0, 0);
+      sprite.body.setFriction(0);
+      sprite.body.setDrag(0);
     }
-    
-    sprite.setDamping(false);
-    sprite.setDrag(0);
     
     return sprite;
   }
@@ -248,9 +257,50 @@ export class Player {
         normalized.x * this.getSpeed(),
         normalized.y * this.getSpeed()
       );
+      
+      // Update animation based on movement direction
+      this.updateAnimation(direction);
     } else {
       // No input, stop movement
       this.sprite.setVelocity(0, 0);
+    }
+  }
+  
+  /**
+   * Update player animation based on movement direction
+   */
+  private updateAnimation(direction: { x: number, y: number }): void {
+    // Determine which skin prefix to use
+    let skinPrefix = 'player';
+    if (this.selectedSkin === 'wizard') {
+      skinPrefix = 'wizard';
+    } else if (this.selectedSkin === 'mesmer') {
+      skinPrefix = 'mesmer';
+    }
+    
+    // Determine primary direction for animation with threshold to prevent jittering
+    const threshold = 0.1;
+    let animationKey = '';
+    
+    if (Math.abs(direction.y) > Math.abs(direction.x) + threshold) {
+      // Vertical movement takes priority
+      if (direction.y > 0) {
+        animationKey = `${skinPrefix}-down`;
+      } else {
+        animationKey = `${skinPrefix}-up`;
+      }
+    } else if (Math.abs(direction.x) > Math.abs(direction.y) + threshold) {
+      // Horizontal movement takes priority
+      if (direction.x > 0) {
+        animationKey = `${skinPrefix}-right`;
+      } else {
+        animationKey = `${skinPrefix}-left`;
+      }
+    }
+    
+    // Only change animation if it's different from current
+    if (animationKey && this.sprite.anims.currentAnim?.key !== animationKey) {
+      this.sprite.play(animationKey, true);
     }
   }
   

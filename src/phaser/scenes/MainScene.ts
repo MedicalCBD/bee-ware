@@ -37,7 +37,7 @@ export default class MainScene extends Phaser.Scene {
   private lastFpsUpdate: number = 0;
   
   // Skin selection
-  private selectedSkin: { id: string; image: string } = { id: 'default', image: '/assets/images/game/player.png' };
+  private selectedSkin: { id: string; image: string } = { id: 'default', image: '/assets/images/game/player1.png' };
 
   constructor() {
     super({ key: 'MainScene' });
@@ -89,6 +89,7 @@ export default class MainScene extends Phaser.Scene {
     // Create the game world
     this.assetManager = new AssetManager(this);
     this.assetManager.createWorld();
+    this.assetManager.createPlayerAnimations();
     
     // Get the center coordinates for player placement
     const centerX = GAME_CONFIG.WORLD.WIDTH / 2;

@@ -15,9 +15,21 @@ export class AssetManager {
    * Preload all game assets
    */
   preloadAssets(selectedSkin?: { id: string; image: string }): void {
-    // Load player sprite with selected skin
-    const playerImage = selectedSkin?.image || '/assets/images/game/player.png';
-    this.scene.load.image('player', playerImage);
+    // Load all player sprite sheets
+    this.scene.load.spritesheet('player', '/assets/images/game/player1.png', { 
+      frameWidth: 34, 
+      frameHeight: 48 
+    });
+    
+    this.scene.load.spritesheet('wizard', '/assets/images/game/wizard1.png', { 
+      frameWidth: 34, 
+      frameHeight: 48 
+    });
+    
+    this.scene.load.spritesheet('mesmer', '/assets/images/game/mesmer1.png', { 
+      frameWidth: 34, 
+      frameHeight: 48 
+    });
     
     // Load enemy sprite
     this.scene.load.image('enemy', '/assets/images/game/enemy.png');
@@ -29,6 +41,55 @@ export class AssetManager {
     this.createUpgradeIcons();
   }
   
+  /**
+   * Create player animations
+   */
+  createPlayerAnimations(): void {
+    // Create animations for each skin
+    this.createSkinAnimations('player');
+    this.createSkinAnimations('wizard');
+    this.createSkinAnimations('mesmer');
+  }
+  
+  /**
+   * Create animations for a specific skin
+   */
+  private createSkinAnimations(skinKey: string): void {
+    // Frame order: abajo, arriba, derecha, izquierda (0, 1, 2, 3)
+    
+    // Down animation (frame 0)
+    this.scene.anims.create({
+      key: `${skinKey}-down`,
+      frames: this.scene.anims.generateFrameNumbers(skinKey, { start: 0, end: 0 }),
+      frameRate: 10,
+      repeat: -1
+    });
+    
+    // Up animation (frame 1)
+    this.scene.anims.create({
+      key: `${skinKey}-up`,
+      frames: this.scene.anims.generateFrameNumbers(skinKey, { start: 1, end: 1 }),
+      frameRate: 10,
+      repeat: -1
+    });
+    
+    // Right animation (frame 2)
+    this.scene.anims.create({
+      key: `${skinKey}-right`,
+      frames: this.scene.anims.generateFrameNumbers(skinKey, { start: 2, end: 2 }),
+      frameRate: 10,
+      repeat: -1
+    });
+    
+    // Left animation (frame 3)
+    this.scene.anims.create({
+      key: `${skinKey}-left`,
+      frames: this.scene.anims.generateFrameNumbers(skinKey, { start: 3, end: 3 }),
+      frameRate: 10,
+      repeat: -1
+    });
+  }
+
   /**
    * Create the game world
    */
