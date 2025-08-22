@@ -2,15 +2,5 @@
   "buildCommand": "npm ci --legacy-peer-deps && npm run build",
   "outputDirectory": "dist",
   "framework": "vite",
-  "installCommand": "npm ci --legacy-peer-deps",
-  "routes": [
-    {
-      "src": "/game",
-      "dest": "/game.html"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
-    }
-  ]
+  "installCommand": "npm ci --legacy-peer-deps"
 }
