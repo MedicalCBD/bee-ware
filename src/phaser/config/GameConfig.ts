@@ -42,6 +42,21 @@ export const GAME_CONFIG = {
     KNOCKBACK_DURATION: 200, // ms of knockback effect
     EXPERIENCE_DROP_CHANCE: 1.0 // Chance (0-1) of dropping an experience orb
   },
+  ENEMY2: {
+    SPEED: 100, // Slightly slower due to larger size
+    SCALE: 1.2, // Even bigger than regular enemies (0.6 -> 1.2)
+    DEPTH: 5,
+    SPAWN_INTERVAL: 1000, // ms between spawns
+    MAX_COUNT: 50,
+    SPAWN_PADDING: 20, // Distance from edge
+    HITBOX_SCALE: 0.8,
+    TINT: 0xffffff,
+    MAX_HEALTH: 5, // 50% more health than regular enemies (3 -> 4.5, rounded to 5)
+    DAMAGE_TINT: 0xff8800, // Orange tint when damaged
+    KNOCKBACK_FORCE: 150, // Force applied when hit
+    KNOCKBACK_DURATION: 200, // ms of knockback effect
+    EXPERIENCE_DROP_CHANCE: 1.0 // Chance (0-1) of dropping an experience orb
+  },
   EXPERIENCE_ORB: {
     KEY: 'experience_orb',
     SCALE: 0.3,

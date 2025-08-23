@@ -62,8 +62,11 @@ export class EnemySystem {
    */
   private prepopulateEnemyPool(): void {
     // Preallocate enemy objects to avoid allocations during gameplay
+    // We'll create a mix of both enemy types for the pool
     for (let i = 0; i < GAME_CONFIG.ENEMY.MAX_COUNT; i++) {
-      const enemy = this.enemies.create(0, 0, 'enemy') as Phaser.Physics.Arcade.Sprite;
+      // Alternate between enemy types for the pool
+      const enemyType = i % 2 === 0 ? 'enemy' : 'enemy2';
+      const enemy = this.enemies.create(0, 0, enemyType) as Phaser.Physics.Arcade.Sprite;
       enemy.setActive(false);
       enemy.setVisible(false);
       
@@ -133,14 +136,40 @@ export class EnemySystem {
     // Get random position on the edge of the screen
     const { x, y } = getRandomEdgePosition(width, height, padding);
     
-    // Get an inactive enemy from the pool
-    const enemy = this.enemies.get(x, y, 'enemy') as Phaser.Physics.Arcade.Sprite;
+    // Choose enemy type based on player level
+    const playerLevel = this.player.getLevel();
+    let enemyType = 'enemy';
+    
+    if (playerLevel >= 3) {
+      // From level 3 onwards, enemy2.png starts spawning
+      // 30% chance for enemy2, 70% chance for enemy
+      enemyType = Math.random() < 0.3 ? 'enemy2' : 'enemy';
+    }
+    
+    // Get an inactive enemy from the pool with the appropriate texture
+    const enemy = this.getEnemyFromPool(enemyType);
     
     if (enemy) {
       this.activateEnemy(enemy, x, y);
     }
   }
   
+  /**
+   * Get an inactive enemy from the pool with the specified texture
+   */
+  private getEnemyFromPool(enemyType: string): Phaser.Physics.Arcade.Sprite | null {
+    // Find an inactive enemy with the correct texture
+    for (const enemy of this.enemies.getChildren()) {
+      const sprite = enemy as Phaser.Physics.Arcade.Sprite;
+      if (!sprite.active && sprite.texture.key === enemyType) {
+        return sprite;
+      }
+    }
+    
+    // If no enemy with the correct texture is available, create a new one
+    return this.enemies.create(0, 0, enemyType) as Phaser.Physics.Arcade.Sprite;
+  }
+
   /**
    * Activate an enemy from the pool with specific position
    */
@@ -150,11 +179,14 @@ export class EnemySystem {
     enemy.setVisible(true);
     enemy.setVelocity(0, 0);
     
+    // Determine which config to use based on enemy texture
+    const config = enemy.texture.key === 'enemy2' ? GAME_CONFIG.ENEMY2 : GAME_CONFIG.ENEMY;
+    
     // Reset any enemy state that needs resetting
-    enemy.setTint(GAME_CONFIG.ENEMY.TINT);
+    enemy.setTint(config.TINT);
     
     // Reset health to max
-    (enemy as any).health = GAME_CONFIG.ENEMY.MAX_HEALTH;
+    (enemy as any).health = config.MAX_HEALTH;
     
     // Create or update health bar
     this.createOrUpdateHealthBar(enemy);
@@ -188,17 +220,20 @@ export class EnemySystem {
    * Only needs to be done once when enemy is first created
    */
   private configureEnemyProperties(enemy: Phaser.Physics.Arcade.Sprite): void {
-    enemy.setScale(GAME_CONFIG.ENEMY.SCALE);
-    enemy.setDepth(GAME_CONFIG.ENEMY.DEPTH);
+    // Determine which config to use based on enemy texture
+    const config = enemy.texture.key === 'enemy2' ? GAME_CONFIG.ENEMY2 : GAME_CONFIG.ENEMY;
+    
+    enemy.setScale(config.SCALE);
+    enemy.setDepth(config.DEPTH);
     enemy.setCollideWorldBounds(true);
     
     // Initialize health property
-    (enemy as any).health = GAME_CONFIG.ENEMY.MAX_HEALTH;
+    (enemy as any).health = config.MAX_HEALTH;
     
     if (enemy.body) {
       enemy.body.setSize(
-        enemy.width * GAME_CONFIG.ENEMY.HITBOX_SCALE, 
-        enemy.height * GAME_CONFIG.ENEMY.HITBOX_SCALE
+        enemy.width * config.HITBOX_SCALE, 
+        enemy.height * config.HITBOX_SCALE
       );
     }
   }
@@ -250,6 +285,9 @@ export class EnemySystem {
    * Basic movement for off-screen enemies (less accurate but more efficient)
    */
   private moveOffscreenEnemyBasic(enemy: Phaser.Physics.Arcade.Sprite): void {
+    // Determine which config to use based on enemy texture
+    const config = enemy.texture.key === 'enemy2' ? GAME_CONFIG.ENEMY2 : GAME_CONFIG.ENEMY;
+    
     // Simplified movement toward player (less frequent updates, less precision)
     if (Math.random() < 0.1) { // Only update direction occasionally
       this.vectorBuffer.x = this.target.x - enemy.x;
@@ -262,8 +300,8 @@ export class EnemySystem {
       
       if (length > 0) {
         enemy.setVelocity(
-          (this.vectorBuffer.x / length) * GAME_CONFIG.ENEMY.SPEED * 0.8,
-          (this.vectorBuffer.y / length) * GAME_CONFIG.ENEMY.SPEED * 0.8
+          (this.vectorBuffer.x / length) * config.SPEED * 0.8,
+          (this.vectorBuffer.y / length) * config.SPEED * 0.8
         );
       }
     }
@@ -273,6 +311,9 @@ export class EnemySystem {
    * Move an enemy toward the target (player) - accurate version for visible enemies
    */
   private moveEnemyTowardTarget(enemy: Phaser.Physics.Arcade.Sprite): void {
+    // Determine which config to use based on enemy texture
+    const config = enemy.texture.key === 'enemy2' ? GAME_CONFIG.ENEMY2 : GAME_CONFIG.ENEMY;
+    
     // Calculate direction vector to target using buffer to avoid allocation
     this.vectorBuffer.x = this.target.x - enemy.x;
     this.vectorBuffer.y = this.target.y - enemy.y;
@@ -285,8 +326,8 @@ export class EnemySystem {
     
     if (length > 0) {
       enemy.setVelocity(
-        (this.vectorBuffer.x / length) * GAME_CONFIG.ENEMY.SPEED,
-        (this.vectorBuffer.y / length) * GAME_CONFIG.ENEMY.SPEED
+        (this.vectorBuffer.x / length) * config.SPEED,
+        (this.vectorBuffer.y / length) * config.SPEED
       );
     }
   }
@@ -321,13 +362,16 @@ export class EnemySystem {
       return true;
     }
     
+    // Determine which config to use based on enemy texture
+    const config = enemy.texture.key === 'enemy2' ? GAME_CONFIG.ENEMY2 : GAME_CONFIG.ENEMY;
+    
     // Apply damage visual effect
-    enemy.setTint(GAME_CONFIG.ENEMY.DAMAGE_TINT);
+    enemy.setTint(config.DAMAGE_TINT);
     
     // Reset tint after a short delay
     this.scene.time.delayedCall(200, () => {
       if (enemy.active) {
-        enemy.setTint(GAME_CONFIG.ENEMY.TINT);
+        enemy.setTint(config.TINT);
       }
     });
     
@@ -348,7 +392,7 @@ export class EnemySystem {
         enemy.setVelocity(knockbackX, knockbackY);
         
         // Reset velocity after knockback duration
-        this.scene.time.delayedCall(GAME_CONFIG.ENEMY.KNOCKBACK_DURATION, () => {
+        this.scene.time.delayedCall(config.KNOCKBACK_DURATION, () => {
           if (enemy.active) {
             // Don't set to zero, just let the normal movement take over again
             enemy.setVelocity(0, 0);
@@ -367,27 +411,33 @@ export class EnemySystem {
     // Skip if no experience system is set
     if (!this.experienceSystem) return;
     
+    // Determine which config to use based on enemy texture
+    const config = enemy.texture.key === 'enemy2' ? GAME_CONFIG.ENEMY2 : GAME_CONFIG.ENEMY;
+    
     // Check drop chance
-    if (Math.random() <= GAME_CONFIG.ENEMY.EXPERIENCE_DROP_CHANCE) {
+    if (Math.random() <= config.EXPERIENCE_DROP_CHANCE) {
       // Spawn experience orb at enemy position
       this.experienceSystem.spawnOrb(enemy.x, enemy.y);
       
       // Add a small visual effect
-      this.createDeathEffect(enemy.x, enemy.y);
+      this.createDeathEffect(enemy.x, enemy.y, enemy.texture.key);
     }
   }
   
   /**
    * Create a visual effect when an enemy is defeated
    */
-  private createDeathEffect(x: number, y: number): void {
+  private createDeathEffect(x: number, y: number, enemyType: string = 'enemy'): void {
+    // Determine which config to use based on enemy texture
+    const config = enemyType === 'enemy2' ? GAME_CONFIG.ENEMY2 : GAME_CONFIG.ENEMY;
+    
     // Create particles for death effect
     const particles = this.scene.add.particles(x, y, GAME_CONFIG.EXPERIENCE_ORB.KEY, {
       speed: { min: 50, max: 100 },
       scale: { start: 0.2, end: 0 },
       quantity: 5,
       lifespan: 500,
-      tint: GAME_CONFIG.ENEMY.TINT
+      tint: config.TINT
     });
     
     // Auto-destroy after animation completes
@@ -422,12 +472,15 @@ export class EnemySystem {
     const healthBar = this.healthBars.get(enemy);
     if (!healthBar) return;
     
+    // Determine which config to use based on enemy texture
+    const config = enemy.texture.key === 'enemy2' ? GAME_CONFIG.ENEMY2 : GAME_CONFIG.ENEMY;
+    
     // Clear previous graphics
     healthBar.clear();
     
     // Get current health percentage
     const health = (enemy as any).health || 0;
-    const maxHealth = GAME_CONFIG.ENEMY.MAX_HEALTH;
+    const maxHealth = config.MAX_HEALTH;
     const healthPercent = Math.max(0, Math.min(1, health / maxHealth));
     
     // Set health bar dimensions
@@ -453,7 +506,7 @@ export class EnemySystem {
     }
     
     // Set depth to ensure it renders above the enemy
-    healthBar.setDepth(GAME_CONFIG.ENEMY.DEPTH + 1);
+    healthBar.setDepth(config.DEPTH + 1);
   }
   
   /**

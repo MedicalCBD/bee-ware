@@ -31,8 +31,9 @@ export class AssetManager {
       frameHeight: 48 
     });
     
-    // Load enemy sprite
+    // Load enemy sprites
     this.scene.load.image('enemy', '/assets/images/game/enemy.png');
+    this.scene.load.image('enemy2', '/assets/images/game/enemy2.png');
     
     // Load world background
     this.scene.load.image('background', '/assets/images/game/game-bg.png');
