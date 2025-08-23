@@ -133,7 +133,7 @@ const SelectedSpells: React.FC<SelectedSpellsProps> = ({ gameInstance }) => {
   return (
     <div style={{
       position: 'fixed',
-      top: '150px',
+      top: '250px',
       right: '60px',
       zIndex: 1000,
       display: 'flex',

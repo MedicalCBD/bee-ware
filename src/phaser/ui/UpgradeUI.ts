@@ -21,7 +21,7 @@ export class UpgradeUI {
     
     // Create container for all UI elements
     this.container = this.scene.add.container(0, 0);
-    this.container.setDepth(100);
+    this.container.setDepth(50000);
     this.container.setVisible(false);
     
     // Create semi-transparent background using fixed screen coordinates
@@ -33,12 +33,13 @@ export class UpgradeUI {
       0x000000, 0.7
     );
     this.background.setScrollFactor(0); // Don't scroll with camera
+    this.background.setDepth(50000);
     this.container.add(this.background);
     
     // Create title text using fixed screen coordinates
     this.titleText = this.scene.add.text(
       512, // Fixed center X
-      100, // Fixed Y position
+      200, // Fixed Y position
       'LEVEL UP! Choose an upgrade:',
       {
         fontSize: '32px',
@@ -58,6 +59,7 @@ export class UpgradeUI {
     );
     this.titleText.setOrigin(0.5);
     this.titleText.setScrollFactor(0); // Don't scroll with camera
+    this.titleText.setDepth(50001);
     this.container.add(this.titleText);
     
     // Set default callback
