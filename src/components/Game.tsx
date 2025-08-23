@@ -38,6 +38,7 @@ const Game: React.FC = () => {
   const gameContainerRef = useRef<HTMLDivElement>(null);
   const [gameState, setGameState] = useState<'selection' | 'playing'>('selection');
   const [selectedSkin, setSelectedSkin] = useState<Skin>(AVAILABLE_SKINS[0]);
+  const [gameInstance, setGameInstance] = useState<Phaser.Game | null>(null);
 
   const startGame = (skin: Skin) => {
     setSelectedSkin(skin);
@@ -48,6 +49,7 @@ const Game: React.FC = () => {
     if (gameRef.current) {
       gameRef.current.destroy(true);
       gameRef.current = null;
+      setGameInstance(null);
     }
     setGameState('selection');
   };
@@ -89,12 +91,14 @@ const Game: React.FC = () => {
 
     // Create new game instance
     gameRef.current = new Phaser.Game(config);
+    setGameInstance(gameRef.current);
 
     // Cleanup function
     return () => {
       if (gameRef.current) {
         gameRef.current.destroy(true);
         gameRef.current = null;
+        setGameInstance(null);
       }
     };
   }, [gameState, selectedSkin]);
@@ -111,7 +115,7 @@ const Game: React.FC = () => {
       ) : (
         <>
           <div ref={gameContainerRef} style={{ width: '100%', height: '100%' }} />
-          <SelectedSpells gameInstance={gameRef.current} />
+          <SelectedSpells gameInstance={gameInstance} />
           <button
             onClick={stopGame}
             style={{
