@@ -15,7 +15,6 @@ interface SelectedSpellsProps {
 
 const SelectedSpells: React.FC<SelectedSpellsProps> = ({ gameInstance }) => {
   const [selectedSpells, setSelectedSpells] = useState<Spell[]>([]);
-  const [debugInfo, setDebugInfo] = useState<string>('No game instance');
   const lastUpdateRef = useRef<number>(0);
   const updateTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const isUpdatingRef = useRef<boolean>(false);
@@ -36,17 +35,15 @@ const SelectedSpells: React.FC<SelectedSpellsProps> = ({ gameInstance }) => {
 
     try {
       const scene = gameInstance.scene.getScene('MainScene');
-      if (!scene) {
-        setDebugInfo('No MainScene found');
-        isUpdatingRef.current = false;
-        return;
-      }
+             if (!scene) {
+         isUpdatingRef.current = false;
+         return;
+       }
       
-      if (!scene.upgradeSystem) {
-        setDebugInfo('No upgradeSystem found');
-        isUpdatingRef.current = false;
-        return;
-      }
+             if (!scene.upgradeSystem) {
+         isUpdatingRef.current = false;
+         return;
+       }
 
              // Check if game is paused to avoid updates during pause
        if (PERFORMANCE_CONFIG.PAUSE_PROTECTION.CHECK_PAUSE_STATE && scene.scene.isPaused()) {
@@ -84,21 +81,18 @@ const SelectedSpells: React.FC<SelectedSpellsProps> = ({ gameInstance }) => {
         console.error('Error processing upgrades:', error);
       }
       
-      setSelectedSpells(spells);
-      setDebugInfo(`Found ${spells.length} spells`);
-    } catch (error) {
-      console.error('Error updating spells:', error);
-      setDebugInfo(`Error: ${error}`);
-    } finally {
+             setSelectedSpells(spells);
+         } catch (error) {
+       console.error('Error updating spells:', error);
+     } finally {
       isUpdatingRef.current = false;
     }
   }, [gameInstance]);
 
-  useEffect(() => {
-    if (!gameInstance) {
-      setDebugInfo('No game instance');
-      return;
-    }
+     useEffect(() => {
+     if (!gameInstance) {
+       return;
+     }
 
     // Clear any existing timeout
     if (updateTimeoutRef.current) {
