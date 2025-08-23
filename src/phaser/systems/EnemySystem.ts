@@ -62,10 +62,13 @@ export class EnemySystem {
    */
   private prepopulateEnemyPool(): void {
     // Preallocate enemy objects to avoid allocations during gameplay
-    // We'll create a mix of both enemy types for the pool
+    // We'll create a mix of all enemy types for the pool
     for (let i = 0; i < GAME_CONFIG.ENEMY.MAX_COUNT; i++) {
       // Alternate between enemy types for the pool
-      const enemyType = i % 2 === 0 ? 'enemy' : 'enemy2';
+      let enemyType = 'enemy';
+      if (i % 3 === 1) enemyType = 'enemy2';
+      else if (i % 3 === 2) enemyType = 'enemy3';
+      
       const enemy = this.enemies.create(0, 0, enemyType) as Phaser.Physics.Arcade.Sprite;
       enemy.setActive(false);
       enemy.setVisible(false);
@@ -140,7 +143,17 @@ export class EnemySystem {
     const playerLevel = this.player.getLevel();
     let enemyType = 'enemy';
     
-    if (playerLevel >= 3) {
+    if (playerLevel >= 6) {
+      // From level 6 onwards, enemy3.png starts spawning with higher probability
+      const rand = Math.random();
+      if (rand < 0.4) {
+        enemyType = 'enemy3'; // 40% chance for enemy3
+      } else if (rand < 0.6) {
+        enemyType = 'enemy2'; // 20% chance for enemy2
+      } else {
+        enemyType = 'enemy'; // 40% chance for enemy
+      }
+    } else if (playerLevel >= 3) {
       // From level 3 onwards, enemy2.png starts spawning
       // 30% chance for enemy2, 70% chance for enemy
       enemyType = Math.random() < 0.3 ? 'enemy2' : 'enemy';
@@ -180,7 +193,12 @@ export class EnemySystem {
     enemy.setVelocity(0, 0);
     
     // Determine which config to use based on enemy texture
-    const config = enemy.texture.key === 'enemy2' ? GAME_CONFIG.ENEMY2 : GAME_CONFIG.ENEMY;
+    let config = GAME_CONFIG.ENEMY;
+    if (enemy.texture.key === 'enemy2') {
+      config = GAME_CONFIG.ENEMY2;
+    } else if (enemy.texture.key === 'enemy3') {
+      config = GAME_CONFIG.ENEMY3;
+    }
     
     // Reset any enemy state that needs resetting
     enemy.setTint(config.TINT);
@@ -221,7 +239,12 @@ export class EnemySystem {
    */
   private configureEnemyProperties(enemy: Phaser.Physics.Arcade.Sprite): void {
     // Determine which config to use based on enemy texture
-    const config = enemy.texture.key === 'enemy2' ? GAME_CONFIG.ENEMY2 : GAME_CONFIG.ENEMY;
+    let config = GAME_CONFIG.ENEMY;
+    if (enemy.texture.key === 'enemy2') {
+      config = GAME_CONFIG.ENEMY2;
+    } else if (enemy.texture.key === 'enemy3') {
+      config = GAME_CONFIG.ENEMY3;
+    }
     
     enemy.setScale(config.SCALE);
     enemy.setDepth(config.DEPTH);
@@ -286,7 +309,12 @@ export class EnemySystem {
    */
   private moveOffscreenEnemyBasic(enemy: Phaser.Physics.Arcade.Sprite): void {
     // Determine which config to use based on enemy texture
-    const config = enemy.texture.key === 'enemy2' ? GAME_CONFIG.ENEMY2 : GAME_CONFIG.ENEMY;
+    let config = GAME_CONFIG.ENEMY;
+    if (enemy.texture.key === 'enemy2') {
+      config = GAME_CONFIG.ENEMY2;
+    } else if (enemy.texture.key === 'enemy3') {
+      config = GAME_CONFIG.ENEMY3;
+    }
     
     // Simplified movement toward player (less frequent updates, less precision)
     if (Math.random() < 0.1) { // Only update direction occasionally
@@ -312,7 +340,12 @@ export class EnemySystem {
    */
   private moveEnemyTowardTarget(enemy: Phaser.Physics.Arcade.Sprite): void {
     // Determine which config to use based on enemy texture
-    const config = enemy.texture.key === 'enemy2' ? GAME_CONFIG.ENEMY2 : GAME_CONFIG.ENEMY;
+    let config = GAME_CONFIG.ENEMY;
+    if (enemy.texture.key === 'enemy2') {
+      config = GAME_CONFIG.ENEMY2;
+    } else if (enemy.texture.key === 'enemy3') {
+      config = GAME_CONFIG.ENEMY3;
+    }
     
     // Calculate direction vector to target using buffer to avoid allocation
     this.vectorBuffer.x = this.target.x - enemy.x;
@@ -363,7 +396,12 @@ export class EnemySystem {
     }
     
     // Determine which config to use based on enemy texture
-    const config = enemy.texture.key === 'enemy2' ? GAME_CONFIG.ENEMY2 : GAME_CONFIG.ENEMY;
+    let config = GAME_CONFIG.ENEMY;
+    if (enemy.texture.key === 'enemy2') {
+      config = GAME_CONFIG.ENEMY2;
+    } else if (enemy.texture.key === 'enemy3') {
+      config = GAME_CONFIG.ENEMY3;
+    }
     
     // Apply damage visual effect
     enemy.setTint(config.DAMAGE_TINT);
@@ -412,7 +450,12 @@ export class EnemySystem {
     if (!this.experienceSystem) return;
     
     // Determine which config to use based on enemy texture
-    const config = enemy.texture.key === 'enemy2' ? GAME_CONFIG.ENEMY2 : GAME_CONFIG.ENEMY;
+    let config = GAME_CONFIG.ENEMY;
+    if (enemy.texture.key === 'enemy2') {
+      config = GAME_CONFIG.ENEMY2;
+    } else if (enemy.texture.key === 'enemy3') {
+      config = GAME_CONFIG.ENEMY3;
+    }
     
     // Check drop chance
     if (Math.random() <= config.EXPERIENCE_DROP_CHANCE) {
@@ -429,7 +472,12 @@ export class EnemySystem {
    */
   private createDeathEffect(x: number, y: number, enemyType: string = 'enemy'): void {
     // Determine which config to use based on enemy texture
-    const config = enemyType === 'enemy2' ? GAME_CONFIG.ENEMY2 : GAME_CONFIG.ENEMY;
+    let config = GAME_CONFIG.ENEMY;
+    if (enemyType === 'enemy2') {
+      config = GAME_CONFIG.ENEMY2;
+    } else if (enemyType === 'enemy3') {
+      config = GAME_CONFIG.ENEMY3;
+    }
     
     // Create particles for death effect
     const particles = this.scene.add.particles(x, y, GAME_CONFIG.EXPERIENCE_ORB.KEY, {
@@ -473,7 +521,12 @@ export class EnemySystem {
     if (!healthBar) return;
     
     // Determine which config to use based on enemy texture
-    const config = enemy.texture.key === 'enemy2' ? GAME_CONFIG.ENEMY2 : GAME_CONFIG.ENEMY;
+    let config = GAME_CONFIG.ENEMY;
+    if (enemy.texture.key === 'enemy2') {
+      config = GAME_CONFIG.ENEMY2;
+    } else if (enemy.texture.key === 'enemy3') {
+      config = GAME_CONFIG.ENEMY3;
+    }
     
     // Clear previous graphics
     healthBar.clear();

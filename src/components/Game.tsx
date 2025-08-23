@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import Phaser from 'phaser';
 import MainScene from '../phaser/scenes/MainScene';
 import SkinSelection from './SkinSelection';
+import SelectedSpells from './SelectedSpells';
 
 // Define available skins
 export interface Skin {
@@ -110,6 +111,7 @@ const Game: React.FC = () => {
       ) : (
         <>
           <div ref={gameContainerRef} style={{ width: '100%', height: '100%' }} />
+          <SelectedSpells gameInstance={gameRef.current} />
           <button
             onClick={stopGame}
             style={{

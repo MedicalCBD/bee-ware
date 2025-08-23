@@ -377,6 +377,20 @@ export class UpgradeSystem {
   }
 
   /**
+   * Get all acquired upgrades
+   */
+  getAcquiredUpgrades(): Map<string, number> {
+    return this.acquiredUpgrades;
+  }
+
+  /**
+   * Get all available upgrades
+   */
+  getAvailableUpgrades(): Upgrade[] {
+    return this.availableUpgrades;
+  }
+
+  /**
    * Get dynamic description for thunder magic based on upgrade ID
    */
   getThunderDescription(upgradeId: string): string {

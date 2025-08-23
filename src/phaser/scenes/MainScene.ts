@@ -21,7 +21,7 @@ export default class MainScene extends Phaser.Scene {
   private enemySystem!: EnemySystem;
   private projectileSystem!: ProjectileSystem;
   private experienceSystem!: ExperienceSystem;
-  private upgradeSystem!: UpgradeSystem;
+  public upgradeSystem!: UpgradeSystem;
   private thunderSystem!: ThunderSystem;
   private magicCircleSystem!: MagicCircleSystem;
   private gameUI!: GameUI;
