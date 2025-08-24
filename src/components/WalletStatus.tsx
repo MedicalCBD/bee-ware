@@ -315,7 +315,10 @@ const WalletStatus: React.FC = () => {
            backdropFilter: 'blur(10px)'
          }}>
            <div style={{
-             background: 'linear-gradient(145deg, #1e1e2e 0%, #2d2d44 100%)',
+             background: 'linear-gradient(145deg, rgba(30, 30, 46, 0.8) 0%, rgba(45, 45, 68, 0.8) 100%), url("/assets/modal1.png")',
+             backgroundSize: 'cover',
+             backgroundPosition: 'center',
+             backgroundRepeat: 'no-repeat',
              border: '4px solid',
              borderImage: 'linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7, #dda0dd, #98d8c8) 1',
              borderRadius: '20px',
@@ -408,7 +411,9 @@ const WalletStatus: React.FC = () => {
                marginTop: '20px',
                height: 'calc(95vh - 200px)',
                overflowY: 'auto',
-               paddingRight: '10px'
+               paddingRight: '10px',
+               scrollbarWidth: 'none',
+               msOverflowStyle: 'none'
              }}>
                {/* Controls Section */}
                <div style={{
@@ -434,13 +439,13 @@ const WalletStatus: React.FC = () => {
                    <span style={{ fontSize: '28px' }}>🎮</span> Controls
                  </h3>
                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '15px' }}>
-                   <div style={{ background: 'rgba(255, 255, 255, 0.05)', padding: '15px', borderRadius: '10px', border: '1px solid rgba(255, 107, 107, 0.2)' }}>
-                     <strong style={{ color: '#ff6b6b' }}>WASD / Arrow Keys</strong>
-                     <div style={{ color: '#b0b0b0', fontSize: '14px', marginTop: '5px' }}>Move your bee character</div>
-                   </div>
-                   <div style={{ background: 'rgba(255, 255, 255, 0.05)', padding: '15px', borderRadius: '10px', border: '1px solid rgba(78, 205, 196, 0.2)' }}>
-                     <strong style={{ color: '#4ecdc4' }}>Mouse</strong>
-                     <div style={{ color: '#b0b0b0', fontSize: '14px', marginTop: '5px' }}>Aim and shoot projectiles</div>
+                                       <div style={{ background: 'rgba(255, 255, 255, 0.15)', padding: '15px', borderRadius: '10px', border: '1px solid rgba(255, 107, 107, 0.3)' }}>
+                      <strong style={{ color: '#ff6b6b' }}>WASD / Arrow Keys</strong>
+                      <div style={{ color: '#b0b0b0', fontSize: '14px', marginTop: '5px' }}>Move your bee character</div>
+                    </div>
+                    <div style={{ background: 'rgba(255, 255, 255, 0.15)', padding: '15px', borderRadius: '10px', border: '1px solid rgba(78, 205, 196, 0.3)' }}>
+                      <strong style={{ color: '#4ecdc4' }}>Mouse</strong>
+                      <div style={{ color: '#b0b0b0', fontSize: '14px', marginTop: '5px' }}>Aim and shoot projectiles</div>
                    </div>
 
                  </div>
@@ -470,21 +475,21 @@ const WalletStatus: React.FC = () => {
                    <span style={{ fontSize: '28px' }}>⚡</span> Game Mechanics
                  </h3>
                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '15px' }}>
-                   <div style={{ background: 'rgba(255, 255, 255, 0.05)', padding: '15px', borderRadius: '10px', border: '1px solid rgba(78, 205, 196, 0.2)' }}>
-                     <strong style={{ color: '#4ecdc4' }}>Survive</strong>
-                     <div style={{ color: '#b0b0b0', fontSize: '14px', marginTop: '5px' }}>Avoid enemies and stay alive</div>
-                   </div>
-                   <div style={{ background: 'rgba(255, 255, 255, 0.05)', padding: '15px', borderRadius: '10px', border: '1px solid rgba(69, 183, 209, 0.2)' }}>
-                     <strong style={{ color: '#45b7d1' }}>Kill Enemies</strong>
-                     <div style={{ color: '#b0b0b0', fontSize: '14px', marginTop: '5px' }}>Shoot projectiles to defeat enemies</div>
-                   </div>
-                   <div style={{ background: 'rgba(255, 255, 255, 0.05)', padding: '15px', borderRadius: '10px', border: '1px solid rgba(150, 206, 180, 0.2)' }}>
-                     <strong style={{ color: '#96ceb4' }}>Collect XP</strong>
-                     <div style={{ color: '#b0b0b0', fontSize: '14px', marginTop: '5px' }}>Gain experience by killing enemies</div>
-                   </div>
-                   <div style={{ background: 'rgba(255, 255, 255, 0.05)', padding: '15px', borderRadius: '10px', border: '1px solid rgba(255, 234, 167, 0.2)' }}>
-                     <strong style={{ color: '#ffeaa7' }}>Level Up</strong>
-                     <div style={{ color: '#b0b0b0', fontSize: '14px', marginTop: '5px' }}>Choose upgrades when you level up</div>
+                                       <div style={{ background: 'rgba(255, 255, 255, 0.15)', padding: '15px', borderRadius: '10px', border: '1px solid rgba(78, 205, 196, 0.3)' }}>
+                      <strong style={{ color: '#4ecdc4' }}>Survive</strong>
+                      <div style={{ color: '#b0b0b0', fontSize: '14px', marginTop: '5px' }}>Avoid enemies and stay alive</div>
+                    </div>
+                    <div style={{ background: 'rgba(255, 255, 255, 0.15)', padding: '15px', borderRadius: '10px', border: '1px solid rgba(69, 183, 209, 0.3)' }}>
+                      <strong style={{ color: '#45b7d1' }}>Kill Enemies</strong>
+                      <div style={{ color: '#b0b0b0', fontSize: '14px', marginTop: '5px' }}>Shoot projectiles to defeat enemies</div>
+                    </div>
+                    <div style={{ background: 'rgba(255, 255, 255, 0.15)', padding: '15px', borderRadius: '10px', border: '1px solid rgba(150, 206, 180, 0.3)' }}>
+                      <strong style={{ color: '#96ceb4' }}>Collect XP</strong>
+                      <div style={{ color: '#b0b0b0', fontSize: '14px', marginTop: '5px' }}>Gain experience by killing enemies</div>
+                    </div>
+                    <div style={{ background: 'rgba(255, 255, 255, 0.15)', padding: '15px', borderRadius: '10px', border: '1px solid rgba(255, 234, 167, 0.3)' }}>
+                      <strong style={{ color: '#ffeaa7' }}>Level Up</strong>
+                      <div style={{ color: '#b0b0b0', fontSize: '14px', marginTop: '5px' }}>Choose upgrades when you level up</div>
                    </div>
                  </div>
                </div>
@@ -513,37 +518,37 @@ const WalletStatus: React.FC = () => {
                    <span style={{ fontSize: '28px' }}>🔧</span> Upgrades Available
                  </h3>
                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '12px' }}>
-                   <div style={{ background: 'rgba(255, 255, 255, 0.05)', padding: '12px', borderRadius: '8px', border: '1px solid rgba(255, 107, 107, 0.2)' }}>
-                     <strong style={{ color: '#ff6b6b', fontSize: '14px' }}>Increased Damage</strong>
-                     <div style={{ color: '#b0b0b0', fontSize: '12px', marginTop: '3px' }}>More projectile damage</div>
-                   </div>
-                   <div style={{ background: 'rgba(255, 255, 255, 0.05)', padding: '12px', borderRadius: '8px', border: '1px solid rgba(78, 205, 196, 0.2)' }}>
-                     <strong style={{ color: '#4ecdc4', fontSize: '14px' }}>Attack Speed</strong>
-                     <div style={{ color: '#b0b0b0', fontSize: '12px', marginTop: '3px' }}>Faster shooting</div>
-                   </div>
-                   <div style={{ background: 'rgba(255, 255, 255, 0.05)', padding: '12px', borderRadius: '8px', border: '1px solid rgba(69, 183, 209, 0.2)' }}>
-                     <strong style={{ color: '#45b7d1', fontSize: '14px' }}>Multi-Shot</strong>
-                     <div style={{ color: '#b0b0b0', fontSize: '12px', marginTop: '3px' }}>Additional projectiles</div>
-                   </div>
-                   <div style={{ background: 'rgba(255, 255, 255, 0.05)', padding: '12px', borderRadius: '8px', border: '1px solid rgba(150, 206, 180, 0.2)' }}>
-                     <strong style={{ color: '#96ceb4', fontSize: '14px' }}>Larger Projectiles</strong>
-                     <div style={{ color: '#b0b0b0', fontSize: '12px', marginTop: '3px' }}>Bigger projectile size</div>
-                   </div>
-                   <div style={{ background: 'rgba(255, 255, 255, 0.05)', padding: '12px', borderRadius: '8px', border: '1px solid rgba(255, 234, 167, 0.2)' }}>
-                     <strong style={{ color: '#ffeaa7', fontSize: '14px' }}>Max Health</strong>
-                     <div style={{ color: '#b0b0b0', fontSize: '12px', marginTop: '3px' }}>More health points</div>
-                   </div>
-                   <div style={{ background: 'rgba(255, 255, 255, 0.05)', padding: '12px', borderRadius: '8px', border: '1px solid rgba(221, 160, 221, 0.2)' }}>
-                     <strong style={{ color: '#dda0dd', fontSize: '14px' }}>Movement Speed</strong>
-                     <div style={{ color: '#b0b0b0', fontSize: '12px', marginTop: '3px' }}>Faster movement</div>
-                   </div>
-                   <div style={{ background: 'rgba(255, 255, 255, 0.05)', padding: '12px', borderRadius: '8px', border: '1px solid rgba(152, 216, 200, 0.2)' }}>
-                     <strong style={{ color: '#98d8c8', fontSize: '14px' }}>Thunder Magic</strong>
-                     <div style={{ color: '#b0b0b0', fontSize: '12px', marginTop: '3px' }}>Lightning strikes every 4s</div>
-                   </div>
-                   <div style={{ background: 'rgba(255, 255, 255, 0.05)', padding: '12px', borderRadius: '8px', border: '1px solid rgba(255, 107, 107, 0.2)' }}>
-                     <strong style={{ color: '#ff6b6b', fontSize: '14px' }}>Magic Circle</strong>
-                     <div style={{ color: '#b0b0b0', fontSize: '12px', marginTop: '3px' }}>Magical protection field</div>
+                                       <div style={{ background: 'rgba(255, 255, 255, 0.15)', padding: '12px', borderRadius: '8px', border: '1px solid rgba(255, 107, 107, 0.3)' }}>
+                      <strong style={{ color: '#ff6b6b', fontSize: '14px' }}>Increased Damage</strong>
+                      <div style={{ color: '#b0b0b0', fontSize: '12px', marginTop: '3px' }}>More projectile damage</div>
+                    </div>
+                    <div style={{ background: 'rgba(255, 255, 255, 0.15)', padding: '12px', borderRadius: '8px', border: '1px solid rgba(78, 205, 196, 0.3)' }}>
+                      <strong style={{ color: '#4ecdc4', fontSize: '14px' }}>Attack Speed</strong>
+                      <div style={{ color: '#b0b0b0', fontSize: '12px', marginTop: '3px' }}>Faster shooting</div>
+                    </div>
+                    <div style={{ background: 'rgba(255, 255, 255, 0.15)', padding: '12px', borderRadius: '8px', border: '1px solid rgba(69, 183, 209, 0.3)' }}>
+                      <strong style={{ color: '#45b7d1', fontSize: '14px' }}>Multi-Shot</strong>
+                      <div style={{ color: '#b0b0b0', fontSize: '12px', marginTop: '3px' }}>Additional projectiles</div>
+                    </div>
+                    <div style={{ background: 'rgba(255, 255, 255, 0.15)', padding: '12px', borderRadius: '8px', border: '1px solid rgba(150, 206, 180, 0.3)' }}>
+                      <strong style={{ color: '#96ceb4', fontSize: '14px' }}>Larger Projectiles</strong>
+                      <div style={{ color: '#b0b0b0', fontSize: '12px', marginTop: '3px' }}>Bigger projectile size</div>
+                    </div>
+                    <div style={{ background: 'rgba(255, 255, 255, 0.15)', padding: '12px', borderRadius: '8px', border: '1px solid rgba(255, 234, 167, 0.3)' }}>
+                      <strong style={{ color: '#ffeaa7', fontSize: '14px' }}>Max Health</strong>
+                      <div style={{ color: '#b0b0b0', fontSize: '12px', marginTop: '3px' }}>More health points</div>
+                    </div>
+                    <div style={{ background: 'rgba(255, 255, 255, 0.15)', padding: '12px', borderRadius: '8px', border: '1px solid rgba(221, 160, 221, 0.3)' }}>
+                      <strong style={{ color: '#dda0dd', fontSize: '14px' }}>Movement Speed</strong>
+                      <div style={{ color: '#b0b0b0', fontSize: '12px', marginTop: '3px' }}>Faster movement</div>
+                    </div>
+                    <div style={{ background: 'rgba(255, 255, 255, 0.15)', padding: '12px', borderRadius: '8px', border: '1px solid rgba(152, 216, 200, 0.3)' }}>
+                      <strong style={{ color: '#98d8c8', fontSize: '14px' }}>Thunder Magic</strong>
+                      <div style={{ color: '#b0b0b0', fontSize: '12px', marginTop: '3px' }}>Lightning strikes every 4s</div>
+                    </div>
+                    <div style={{ background: 'rgba(255, 255, 255, 0.15)', padding: '12px', borderRadius: '8px', border: '1px solid rgba(255, 107, 107, 0.3)' }}>
+                      <strong style={{ color: '#ff6b6b', fontSize: '14px' }}>Magic Circle</strong>
+                      <div style={{ color: '#b0b0b0', fontSize: '12px', marginTop: '3px' }}>Magical protection field</div>
                    </div>
                  </div>
                </div>
@@ -572,17 +577,17 @@ const WalletStatus: React.FC = () => {
                    <span style={{ fontSize: '28px' }}>🎯</span> Pro Tips
                  </h3>
                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '15px' }}>
-                   <div style={{ background: 'rgba(255, 255, 255, 0.05)', padding: '15px', borderRadius: '10px', border: '1px solid rgba(150, 206, 180, 0.2)' }}>
-                     <div style={{ color: '#96ceb4', fontSize: '14px' }}>Keep moving to avoid enemy attacks</div>
-                   </div>
-                   <div style={{ background: 'rgba(255, 255, 255, 0.05)', padding: '15px', borderRadius: '10px', border: '1px solid rgba(255, 234, 167, 0.2)' }}>
-                     <div style={{ color: '#ffeaa7', fontSize: '14px' }}>Prioritize upgrades based on your playstyle</div>
-                   </div>
-                   <div style={{ background: 'rgba(255, 255, 255, 0.05)', padding: '15px', borderRadius: '10px', border: '1px solid rgba(221, 160, 221, 0.2)' }}>
-                     <div style={{ color: '#dda0dd', fontSize: '14px' }}>Watch for automatic thunder strikes</div>
-                   </div>
-                   <div style={{ background: 'rgba(255, 255, 255, 0.05)', padding: '15px', borderRadius: '10px', border: '1px solid rgba(152, 216, 200, 0.2)' }}>
-                     <div style={{ color: '#98d8c8', fontSize: '14px' }}>Try different character skins for variety</div>
+                                       <div style={{ background: 'rgba(255, 255, 255, 0.15)', padding: '15px', borderRadius: '10px', border: '1px solid rgba(150, 206, 180, 0.3)' }}>
+                      <div style={{ color: '#96ceb4', fontSize: '14px' }}>Keep moving to avoid enemy attacks</div>
+                    </div>
+                    <div style={{ background: 'rgba(255, 255, 255, 0.15)', padding: '15px', borderRadius: '10px', border: '1px solid rgba(255, 234, 167, 0.3)' }}>
+                      <div style={{ color: '#ffeaa7', fontSize: '14px' }}>Prioritize upgrades based on your playstyle</div>
+                    </div>
+                    <div style={{ background: 'rgba(255, 255, 255, 0.15)', padding: '15px', borderRadius: '10px', border: '1px solid rgba(221, 160, 221, 0.3)' }}>
+                      <div style={{ color: '#dda0dd', fontSize: '14px' }}>Watch for automatic thunder strikes</div>
+                    </div>
+                    <div style={{ background: 'rgba(255, 255, 255, 0.15)', padding: '15px', borderRadius: '10px', border: '1px solid rgba(152, 216, 200, 0.3)' }}>
+                      <div style={{ color: '#98d8c8', fontSize: '14px' }}>Try different character skins for variety</div>
                    </div>
                  </div>
                </div>
@@ -676,6 +681,11 @@ const WalletStatus: React.FC = () => {
                @keyframes float {
                  0%, 100% { transform: translateY(0px); }
                  50% { transform: translateY(-10px); }
+               }
+               
+               /* Hide scrollbar for webkit browsers */
+               div::-webkit-scrollbar {
+                 display: none;
                }
              `}</style>
            </div>
