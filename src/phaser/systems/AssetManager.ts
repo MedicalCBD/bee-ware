@@ -35,6 +35,7 @@ export class AssetManager {
     this.scene.load.image('enemy', '/assets/images/game/enemy.png');
     this.scene.load.image('enemy2', '/assets/images/game/enemy2.png');
     this.scene.load.image('enemy3', '/assets/images/game/enemy3.png');
+    this.scene.load.image('boss1', '/assets/images/game/boss1.png');
     
     // Load world background
     this.scene.load.image('background', '/assets/images/game/game-bg.png');

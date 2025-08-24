@@ -29,6 +29,9 @@ export class EnemySystem {
   // Track which enemies have been damaged by which trail circles to prevent spam
   private trailDamageTracker: Map<Phaser.Physics.Arcade.Sprite, Set<Phaser.GameObjects.Graphics>> = new Map();
   
+  // Track if boss1 has already been spawned
+  private boss1Spawned: boolean = false;
+  
   constructor(scene: Phaser.Scene, target: Phaser.Physics.Arcade.Sprite, player: Player) {
     this.scene = scene;
     this.target = target;
@@ -66,8 +69,9 @@ export class EnemySystem {
     for (let i = 0; i < GAME_CONFIG.ENEMY.MAX_COUNT; i++) {
       // Alternate between enemy types for the pool
       let enemyType = 'enemy';
-      if (i % 3 === 1) enemyType = 'enemy2';
-      else if (i % 3 === 2) enemyType = 'enemy3';
+      if (i % 4 === 1) enemyType = 'enemy2';
+      else if (i % 4 === 2) enemyType = 'enemy3';
+      else if (i % 4 === 3) enemyType = 'boss1';
       
       const enemy = this.enemies.create(0, 0, enemyType) as Phaser.Physics.Arcade.Sprite;
       enemy.setActive(false);
@@ -154,9 +158,16 @@ export class EnemySystem {
         enemyType = 'enemy'; // 40% chance for enemy
       }
     } else if (playerLevel >= 3) {
-      // From level 3 onwards, enemy2.png starts spawning
-      // 30% chance for enemy2, 70% chance for enemy
-      enemyType = Math.random() < 0.3 ? 'enemy2' : 'enemy';
+      // From level 3 onwards, enemy2.png starts spawning and boss1 appears (only once)
+      const rand = Math.random();
+      if (rand < 0.05 && !this.boss1Spawned) {
+        enemyType = 'boss1'; // 5% chance for boss1 (rare spawn, only once)
+        this.boss1Spawned = true; // Mark boss1 as spawned
+      } else if (rand < 0.35) {
+        enemyType = 'enemy2'; // 30% chance for enemy2
+      } else {
+        enemyType = 'enemy'; // 65% chance for enemy
+      }
     }
     
     // Get an inactive enemy from the pool with the appropriate texture
@@ -198,6 +209,8 @@ export class EnemySystem {
       config = GAME_CONFIG.ENEMY2;
     } else if (enemy.texture.key === 'enemy3') {
       config = GAME_CONFIG.ENEMY3;
+    } else if (enemy.texture.key === 'boss1') {
+      config = GAME_CONFIG.BOSS1;
     }
     
     // Reset any enemy state that needs resetting
@@ -244,6 +257,8 @@ export class EnemySystem {
       config = GAME_CONFIG.ENEMY2;
     } else if (enemy.texture.key === 'enemy3') {
       config = GAME_CONFIG.ENEMY3;
+    } else if (enemy.texture.key === 'boss1') {
+      config = GAME_CONFIG.BOSS1;
     }
     
     enemy.setScale(config.SCALE);
@@ -455,6 +470,8 @@ export class EnemySystem {
       config = GAME_CONFIG.ENEMY2;
     } else if (enemy.texture.key === 'enemy3') {
       config = GAME_CONFIG.ENEMY3;
+    } else if (enemy.texture.key === 'boss1') {
+      config = GAME_CONFIG.BOSS1;
     }
     
     // Check drop chance
@@ -471,6 +488,12 @@ export class EnemySystem {
    * Create a visual effect when an enemy is defeated
    */
   private createDeathEffect(x: number, y: number, enemyType: string = 'enemy'): void {
+    // Special explosion effect for boss1
+    if (enemyType === 'boss1') {
+      this.createBossExplosion(x, y);
+      return;
+    }
+    
     // Determine which config to use based on enemy texture
     let config = GAME_CONFIG.ENEMY;
     if (enemyType === 'enemy2') {
@@ -491,6 +514,73 @@ export class EnemySystem {
     // Auto-destroy after animation completes
     this.scene.time.delayedCall(500, () => {
       particles.destroy();
+    });
+  }
+  
+  /**
+   * Create a special explosion effect for boss1 death
+   */
+  private createBossExplosion(x: number, y: number): void {
+    // Create multiple particle systems for a more dramatic effect
+    
+    // Main explosion particles (orange/red)
+    const mainExplosion = this.scene.add.particles(x, y, GAME_CONFIG.EXPERIENCE_ORB.KEY, {
+      speed: { min: 100, max: 200 },
+      scale: { start: 0.4, end: 0 },
+      quantity: 15,
+      lifespan: 800,
+      tint: 0xff6600, // Orange
+      angle: { min: 0, max: 360 },
+      gravityY: 50
+    });
+    
+    // Secondary explosion particles (yellow)
+    const secondaryExplosion = this.scene.add.particles(x, y, GAME_CONFIG.EXPERIENCE_ORB.KEY, {
+      speed: { min: 80, max: 150 },
+      scale: { start: 0.3, end: 0 },
+      quantity: 10,
+      lifespan: 600,
+      tint: 0xffff00, // Yellow
+      angle: { min: 0, max: 360 },
+      gravityY: 30
+    });
+    
+    // Shockwave effect (white particles)
+    const shockwave = this.scene.add.particles(x, y, GAME_CONFIG.EXPERIENCE_ORB.KEY, {
+      speed: { min: 150, max: 250 },
+      scale: { start: 0.2, end: 0 },
+      quantity: 8,
+      lifespan: 400,
+      tint: 0xffffff, // White
+      angle: { min: 0, max: 360 }
+    });
+    
+    // Screen shake effect
+    this.scene.cameras.main.shake(300, 0.02);
+    
+    // Auto-destroy all particle systems after animation completes
+    this.scene.time.delayedCall(800, () => {
+      mainExplosion.destroy();
+      secondaryExplosion.destroy();
+      shockwave.destroy();
+    });
+    
+    // Add a flash effect
+    const flash = this.scene.add.graphics();
+    flash.fillStyle(0xffffff, 0.3);
+    flash.fillRect(0, 0, this.scene.cameras.main.width, this.scene.cameras.main.height);
+    flash.setScrollFactor(0);
+    flash.setDepth(10000);
+    
+    // Fade out the flash
+    this.scene.tweens.add({
+      targets: flash,
+      alpha: 0,
+      duration: 200,
+      ease: 'Power2',
+      onComplete: () => {
+        flash.destroy();
+      }
     });
   }
   
@@ -526,6 +616,8 @@ export class EnemySystem {
       config = GAME_CONFIG.ENEMY2;
     } else if (enemy.texture.key === 'enemy3') {
       config = GAME_CONFIG.ENEMY3;
+    } else if (enemy.texture.key === 'boss1') {
+      config = GAME_CONFIG.BOSS1;
     }
     
     // Clear previous graphics
