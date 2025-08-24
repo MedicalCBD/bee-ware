@@ -582,6 +582,110 @@ export class EnemySystem {
         flash.destroy();
       }
     });
+    
+    // Show boss death message after explosion
+    this.scene.time.delayedCall(1000, () => {
+      this.showBossDeathMessage();
+    });
+  }
+  
+  /**
+   * Show boss death message with speech bubble
+   */
+  private showBossDeathMessage(): void {
+    const centerX = this.scene.cameras.main.width / 2;
+    const centerY = this.scene.cameras.main.height / 2;
+    
+    // Create speech bubble background
+    const bubble = this.scene.add.graphics();
+    bubble.fillStyle(0x000000, 0.8);
+    bubble.lineStyle(4, 0xffffff, 1);
+    
+    // Draw speech bubble shape
+    const bubbleWidth = 400;
+    const bubbleHeight = 120;
+    const bubbleX = centerX - bubbleWidth / 2;
+    const bubbleY = centerY - bubbleHeight / 2;
+    
+    // Main bubble rectangle with rounded corners
+    bubble.fillRoundedRect(bubbleX, bubbleY, bubbleWidth, bubbleHeight, 20);
+    bubble.strokeRoundedRect(bubbleX, bubbleY, bubbleWidth, bubbleHeight, 20);
+    
+    // Speech bubble tail pointing down
+    bubble.fillTriangle(
+      centerX - 20, bubbleY + bubbleHeight,
+      centerX + 20, bubbleY + bubbleHeight,
+      centerX, bubbleY + bubbleHeight + 30
+    );
+    bubble.lineStyle(4, 0xffffff, 1);
+    bubble.strokeTriangle(
+      centerX - 20, bubbleY + bubbleHeight,
+      centerX + 20, bubbleY + bubbleHeight,
+      centerX, bubbleY + bubbleHeight + 30
+    );
+    
+    bubble.setScrollFactor(0);
+    bubble.setDepth(15000);
+    
+    // Add boss1 image
+    const bossImage = this.scene.add.image(
+      bubbleX + 60, 
+      bubbleY + bubbleHeight / 2, 
+      'boss1'
+    );
+    bossImage.setScale(0.8);
+    bossImage.setScrollFactor(0);
+    bossImage.setDepth(15001);
+    
+    // Add death message text
+    const messageText = this.scene.add.text(
+      bubbleX + 140,
+      bubbleY + bubbleHeight / 2,
+      'ARGGGH IM DEAD NOW\nSEE YOU ON TWITTER',
+      {
+        fontSize: '18px',
+        color: '#ffffff',
+        fontStyle: 'bold',
+        stroke: '#000000',
+        strokeThickness: 3,
+        align: 'center',
+        lineSpacing: 5
+      }
+    );
+    messageText.setOrigin(0, 0.5);
+    messageText.setScrollFactor(0);
+    messageText.setDepth(15001);
+    
+    // Add entrance animation
+    bubble.setScale(0);
+    bossImage.setScale(0);
+    messageText.setScale(0);
+    
+    // Animate entrance
+    this.scene.tweens.add({
+      targets: [bubble, bossImage, messageText],
+      scale: 1,
+      duration: 500,
+      ease: 'Back.easeOut',
+      delay: 200
+    });
+    
+    // Auto-destroy after 4 seconds
+    this.scene.time.delayedCall(4000, () => {
+      // Animate exit
+      this.scene.tweens.add({
+        targets: [bubble, bossImage, messageText],
+        scale: 0,
+        alpha: 0,
+        duration: 300,
+        ease: 'Power2',
+        onComplete: () => {
+          bubble.destroy();
+          bossImage.destroy();
+          messageText.destroy();
+        }
+      });
+    });
   }
   
   /**
